@@ -6,6 +6,7 @@
 #include<stdio.h>
 #include<stdlib.h>
 #include<graphics.h>
+#include<conio.h>
 
 
 
@@ -14,7 +15,9 @@ int main()
 {
 	// 初始化图形窗口
 	initgraph(640, 480);
-
+	IMAGE imag1;
+	loadimage(&imag1, _T("G:\\图片\\Saved Pictures\\test1.jpg"));
+	putimage(0, 0, &imag1);
 	MOUSEMSG m;						// 定义鼠标消息
 	while (true)
 	{
