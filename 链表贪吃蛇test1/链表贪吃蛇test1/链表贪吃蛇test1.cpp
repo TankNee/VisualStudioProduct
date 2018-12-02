@@ -6,6 +6,8 @@
 #include<conio.h>
 #include<stdlib.h>
 #include<graphics.h>
+#include<time.h>
+//宏定义
 #define LEFT  0x4B00
 #define RIGHT 0x4D00
 #define UP    0x4800
@@ -16,17 +18,52 @@
 #define GAMEFRAME_WIDTH 64
 #define FRAME_HEIGHTH 48
 #define DATAFRAME_WIDTH 48
-
+//函数声明
+void startup();
+//循环变量
 int i, j;
-//蛇的结构体
-/*typedef   struct SnakeBody
+//食物的结构体
+struct food
 {
 	int x;
 	int y;
-	struct SnakeBody *previous;
-	struct SnakeBody *next;
-} *head, *tail;*/
-void startup();
+} food1;
+//毒药的结构体
+struct poison
+{
+	int x;
+	int y;
+}poison1 ;
+//蛇的结构体
+struct Snake
+{
+	int x[50];
+	int y[50];
+	int length;
+	struct Snake *previous;
+	struct Snake *next;
+} *head, *tail,snake;
+//毒药的生成
+void creaPoison()
+{
+	srand((unsigned)time(NULL));
+	poison1.x = (rand() * 100) % 53 + 1;
+	poison1.y = (rand() * 100) % 54 + 1;
+	moveto(poison1.x*SIZE, poison1.y*SIZE);
+	setfillcolor(GREEN);
+	fillcircle(poison1.x*SIZE + SIZE / 2, poison1.y*SIZE + SIZE / 2, SIZE / 2);
+}
+//食物的生成
+void creatFood()
+{
+	srand((unsigned)time(NULL));
+	food1.x = (rand() * 100) % 62 + 1;
+	food1.y = (rand() * 100) % 62 + 1;
+	moveto(food1.x*SIZE, food1.y*SIZE);
+	setfillcolor(RED);
+	fillcircle(food1.x*SIZE + 5, food1.y*SIZE + 5, SIZE / 2);
+}
+//初始化界面
 void welcomeUI()
 {
 	IMAGE img1;
@@ -39,29 +76,11 @@ void welcomeUI()
 		if (m.mkLButton)
 		{
 			startup();
+			break;
 		}
 	}
-	
-	
-	
-
-	/*int n;
-	char s[20];
-	RECT r = { 0,0,1120,480 };
-	drawtext(_T("Please input '1' to go on"), &r, DT_CENTER | DT_VCENTER | DT_SINGLELINE);
-	InputBox(s, 20, "输入1以继续");
-	sscanf_s(s, "%d", &n);
-	switch (n)
-	{
-	case 1:
-		closegraph();
-		initgraph(1120, 480);
-		//drawtext(_T("Hello World!"), &r, DT_CENTER | DT_VCENTER | DT_SINGLELINE);
-		break;
-	}*/
 }
-
-//初始化函数
+//数据初始化函数
 void startup()
 {
 	for (i = 0; i < GAMEFRAME_WIDTH; i++)
@@ -82,10 +101,17 @@ void startup()
 		setfillcolor(BLUE);
 		fillrectangle((GAMEFRAME_WIDTH - 1)*SIZE, j*SIZE, GAMEFRAME_WIDTH*SIZE, (j + 1)*SIZE);
 	}
+	snake.x[0] = GAMEFRAME_WIDTH / 2;
+	snake.y[0] = FRAME_HEIGHTH / 2;
+	moveto(snake.x[0], snake.y[0]);
+	setfillcolor(YELLOW);
+	fillcircle(snake.x[0] - SIZE / 2, snake.y[0] - SIZE / 2, SIZE / 2);
+	snake.length = 4;
+
+	creatFood();
+	creaPoison();
 }
-
-
-
+//主函数
 int main()
 {
 	initgraph(1120, 480);
