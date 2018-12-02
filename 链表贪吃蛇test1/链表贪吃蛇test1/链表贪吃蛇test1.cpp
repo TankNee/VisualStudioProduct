@@ -61,7 +61,19 @@ void creatFood()
 	food1.y = (rand() * 100) % 62 + 1;
 	moveto(food1.x*SIZE, food1.y*SIZE);
 	setfillcolor(RED);
-	fillcircle(food1.x*SIZE + 5, food1.y*SIZE + 5, SIZE / 2);
+	fillcircle(food1.x*SIZE + SIZE / 2, food1.y*SIZE + SIZE / 2, SIZE / 2);
+}
+void snakePaint()
+{
+	moveto(snake.x[0], snake.y[0]);
+	setfillcolor(YELLOW);
+	fillcircle(snake.x[0] * SIZE - SIZE / 2, snake.y[0] * SIZE - SIZE / 2, SIZE / 2);
+	for (i = 0; i < snake.length; i++)
+	{
+		moveto(snake.x[i], snake.y[i]);
+		setfillcolor(LIGHTBLUE);
+		fillcircle(snake.x[i] * SIZE - SIZE / 2, snake.y[i] * SIZE - SIZE / 2, SIZE / 2);
+	}
 }
 //初始化界面
 void welcomeUI()
@@ -83,6 +95,7 @@ void welcomeUI()
 //数据初始化函数
 void startup()
 {
+	//打印边框
 	for (i = 0; i < GAMEFRAME_WIDTH; i++)
 	{
 		moveto(i*SIZE, 0);
@@ -101,15 +114,28 @@ void startup()
 		setfillcolor(BLUE);
 		fillrectangle((GAMEFRAME_WIDTH - 1)*SIZE, j*SIZE, GAMEFRAME_WIDTH*SIZE, (j + 1)*SIZE);
 	}
+	//打印蛇头和蛇身
 	snake.x[0] = GAMEFRAME_WIDTH / 2;
 	snake.y[0] = FRAME_HEIGHTH / 2;
 	moveto(snake.x[0], snake.y[0]);
 	setfillcolor(YELLOW);
-	fillcircle(snake.x[0] - SIZE / 2, snake.y[0] - SIZE / 2, SIZE / 2);
+	fillcircle(snake.x[0]*SIZE - SIZE / 2, snake.y[0]*SIZE - SIZE / 2, SIZE / 2);
 	snake.length = 4;
-
+	for (i = 1; i < snake.length; i++)
+	{
+		snake.x[i] = GAMEFRAME_WIDTH / 2-i;
+		snake.y[i] = FRAME_HEIGHTH / 2;
+		moveto(snake.x[i], snake.y[i]);
+		setfillcolor(LIGHTBLUE);
+		fillcircle(snake.x[i] * SIZE - SIZE / 2, snake.y[i] * SIZE - SIZE / 2, SIZE / 2);
+	}
+	//打印食物与毒药
 	creatFood();
 	creaPoison();
+}
+void snakeMove()
+{
+
 }
 //主函数
 int main()
