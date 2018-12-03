@@ -1,12 +1,11 @@
 ﻿#include<stdio.h>
 #include<Windows.h>
-#include<stdlib.h>
 #include "pch.h"
-#include <iostream>
 #include<conio.h>
 #include<stdlib.h>
 #include<graphics.h>
 #include<time.h>
+#include <iostream>
 //宏定义
 #define LEFT  0x4B00
 #define RIGHT 0x4D00
@@ -22,6 +21,8 @@
 void startup();
 //循环变量
 int i, j;
+//蛇身的长度
+int length=4;
 //食物的结构体
 struct food
 {
@@ -35,16 +36,37 @@ struct poison
 	int y;
 }poison1 ;
 //蛇的结构体
-struct Snake
+struct snakeNode
 {
-	int x[50];
-	int y[50];
-	int length;
-	struct Snake *previous;
-	struct Snake *next;
-} *head, *tail,snake;
+	int x;
+	int y;
+	int number;
+	struct snakeNode *previous=NULL;
+	struct snakeNode *next=NULL;
+} *snakept_1, *snakept_2,snake,*head;
+void iniSnake()
+{
+	head = (struct snakeNode *)malloc(sizeof(struct snakeNode));
+	head->number = 1;
+	head->next = NULL;
+	head->previous = NULL;
+	head->x = GAMEFRAME_WIDTH / 2;
+	head->y = FRAME_HEIGHTH / 2;
+	snakept_2 = head;
+	for (i = 2; i <= length; i++)
+	{
+		snakept_1= (struct snakeNode *)malloc(sizeof(struct snakeNode));
+		snakept_1->number = i;
+		snakept_1->x = snakept_2->x - 1;
+		snakept_1->y = snakept_2->y;
+		snakept_1->next = snakept_2->next;
+		snakept_2->next = snakept_1;
+		snakept_1->previous = snakept_2;
+	}
+
+}
 //毒药的生成
-void creaPoison()
+void creatPoison()
 {
 	srand((unsigned)time(NULL));
 	poison1.x = (rand() * 100) % 53 + 1;
@@ -65,7 +87,22 @@ void creatFood()
 }
 void snakePaint()
 {
-	moveto(snake.x[0], snake.y[0]);
+	struct snakeNode *point;
+	point = head;
+	moveto(point->x*SIZE, point->y*SIZE);
+	setfillcolor(YELLOW);
+	fillcircle(point->x*SIZE+ SIZE / 2, point->y*SIZE+ SIZE / 2,SIZE/2);
+	point = point->next;
+	while (point->next!=NULL)
+	{
+		moveto(point->x*SIZE,point->y*SIZE);
+		setfillcolor(LIGHTBLUE);
+		fillcircle(point->x*SIZE + SIZE / 2, point->y*SIZE + SIZE / 2, SIZE / 2);
+		point = point->next;
+	}
+	
+	
+	/*moveto(snake.x[0], snake.y[0]);
 	setfillcolor(YELLOW);
 	fillcircle(snake.x[0] * SIZE - SIZE / 2, snake.y[0] * SIZE - SIZE / 2, SIZE / 2);
 	for (i = 0; i < snake.length; i++)
@@ -73,7 +110,7 @@ void snakePaint()
 		moveto(snake.x[i], snake.y[i]);
 		setfillcolor(LIGHTBLUE);
 		fillcircle(snake.x[i] * SIZE - SIZE / 2, snake.y[i] * SIZE - SIZE / 2, SIZE / 2);
-	}
+	}*/
 }
 //初始化界面
 void welcomeUI()
@@ -82,7 +119,7 @@ void welcomeUI()
 	loadimage(&img1, _T("G:\\图片\\Saved Pictures\\微信图片_20180808214022.jpg"));
 	putimage(0, 0, &img1);
 	MOUSEMSG m;
-	while (true)
+	/*while (true)
 	{
 		m = GetMouseMsg();
 		if (m.mkLButton)
@@ -90,7 +127,7 @@ void welcomeUI()
 			startup();
 			break;
 		}
-	}
+	}*/
 }
 //数据初始化函数
 void startup()
@@ -114,8 +151,10 @@ void startup()
 		setfillcolor(BLUE);
 		fillrectangle((GAMEFRAME_WIDTH - 1)*SIZE, j*SIZE, GAMEFRAME_WIDTH*SIZE, (j + 1)*SIZE);
 	}
+	iniSnake();
+	snakePaint();
 	//打印蛇头和蛇身
-	snake.x[0] = GAMEFRAME_WIDTH / 2;
+	/*snake.x[0] = GAMEFRAME_WIDTH / 2;
 	snake.y[0] = FRAME_HEIGHTH / 2;
 	moveto(snake.x[0], snake.y[0]);
 	setfillcolor(YELLOW);
@@ -128,10 +167,10 @@ void startup()
 		moveto(snake.x[i], snake.y[i]);
 		setfillcolor(LIGHTBLUE);
 		fillcircle(snake.x[i] * SIZE - SIZE / 2, snake.y[i] * SIZE - SIZE / 2, SIZE / 2);
-	}
+	}*/
 	//打印食物与毒药
 	creatFood();
-	creaPoison();
+	creatPoison();
 }
 void snakeMove()
 {
