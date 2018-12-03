@@ -80,8 +80,8 @@ void creatPoison()
 void creatFood()
 {
 	srand((unsigned)time(NULL));
-	food1.x = (rand() * 100) % 62 + 1;
-	food1.y = (rand() * 100) % 62 + 1;
+	food1.x = (rand() * 100) % 34 + 1;
+	food1.y = (rand() * 100) % 15 + 1;
 	moveto(food1.x*SIZE, food1.y*SIZE);
 	setfillcolor(RED);
 	fillcircle(food1.x*SIZE + SIZE / 2, food1.y*SIZE + SIZE / 2, SIZE / 2);
@@ -94,28 +94,13 @@ void snakePaint()
 	setfillcolor(YELLOW);
 	fillcircle(point->x*SIZE+ SIZE / 2, point->y*SIZE+ SIZE / 2,SIZE/2);
 	point = point->next;
-	do
+	while (point!=NULL)
 	{
 		moveto(point->x*SIZE, point->y*SIZE);
 		setfillcolor(LIGHTBLUE);
 		fillcircle(point->x*SIZE + SIZE / 2, point->y*SIZE + SIZE / 2, SIZE / 2);
 		point = point->next;
-	} while (point->next != NULL);
-	moveto(point->x*SIZE, point->y*SIZE);
-	setfillcolor(LIGHTBLUE);
-	fillcircle(point->x*SIZE + SIZE / 2, point->y*SIZE + SIZE / 2, SIZE / 2);
-	//point = point->next;
-	
-	
-	/*moveto(snake.x[0], snake.y[0]);
-	setfillcolor(YELLOW);
-	fillcircle(snake.x[0] * SIZE - SIZE / 2, snake.y[0] * SIZE - SIZE / 2, SIZE / 2);
-	for (i = 0; i < snake.length; i++)
-	{
-		moveto(snake.x[i], snake.y[i]);
-		setfillcolor(LIGHTBLUE);
-		fillcircle(snake.x[i] * SIZE - SIZE / 2, snake.y[i] * SIZE - SIZE / 2, SIZE / 2);
-	}*/
+	} 
 }
 //初始化界面
 void welcomeUI()
@@ -156,37 +141,69 @@ void startup()
 		setfillcolor(BLUE);
 		fillrectangle((GAMEFRAME_WIDTH - 1)*SIZE, j*SIZE, GAMEFRAME_WIDTH*SIZE, (j + 1)*SIZE);
 	}
+	//初始化蛇身
 	iniSnake();
+	//打印蛇身
 	snakePaint();
-	//打印蛇头和蛇身
-	/*snake.x[0] = GAMEFRAME_WIDTH / 2;
-	snake.y[0] = FRAME_HEIGHTH / 2;
-	moveto(snake.x[0], snake.y[0]);
-	setfillcolor(YELLOW);
-	fillcircle(snake.x[0]*SIZE - SIZE / 2, snake.y[0]*SIZE - SIZE / 2, SIZE / 2);
-	snake.length = 4;
-	for (i = 1; i < snake.length; i++)
-	{
-		snake.x[i] = GAMEFRAME_WIDTH / 2-i;
-		snake.y[i] = FRAME_HEIGHTH / 2;
-		moveto(snake.x[i], snake.y[i]);
-		setfillcolor(LIGHTBLUE);
-		fillcircle(snake.x[i] * SIZE - SIZE / 2, snake.y[i] * SIZE - SIZE / 2, SIZE / 2);
-	}*/
 	//打印食物与毒药
 	creatFood();
 	creatPoison();
 }
-void snakeMove()
+//移动方法：新建一个头节点，删除一个尾节点
+void Move( char input)
 {
-
+	struct snakeNode *point;
+	point = (struct snakeNode *)malloc(sizeof(struct snakeNode));
+	point->x = head->x;
+	point->y = head->y;
+	point->number = 0;
+	point->next = head;
+	head->previous = point;
+	head = point;
+	while (point->next!=NULL)
+	{
+		point = point->next;
+	}
+	free(point);
+	switch (input)
+	{
+	case 'w':
+		head->y -= 1;
+		break;
+	case 'a':
+		head->x -= 1;
+		break;
+	case 's':
+		head->y += 1;
+		break;
+	case 'd':
+		head->x += 1;
+		break;
+	default:
+		break;
+	}
+}
+void inputConcerned()
+{
+	char input;
+	if (_kbhit())
+	{
+		input = getchar();
+		Move(input);
+		snakePaint();
+	}
 }
 //主函数
 int main()
 {
-	initgraph(1120, 480);
-	welcomeUI();
+	initgraph(1120, 480);	
+	//welcomeUI();
 	startup();
+	while (1)
+	{
+		Move;
+		inputConcerned;
+	}
 	getchar();
 	closegraph();
 }	

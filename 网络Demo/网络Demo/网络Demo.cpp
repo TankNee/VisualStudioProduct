@@ -7,11 +7,22 @@
 int main()
 {
 	initgraph(640, 480);
-	char s[10];
-	InputBox(s,  20, "请输入半径");
-	int r;
-	sscanf_s(s, "%d", &r);
-	circle(100, 100, r);
-	getchar();
+
+	setlinecolor(WHITE);
+	setfillcolor(RED);
+
+	 BeginBatchDraw();
+	for (int i = 50; i < 600; i++)
+	{
+		circle(i, 100, 40);
+		floodfill(i, 100, WHITE);
+		 FlushBatchDraw();
+		Sleep(10);
+		cleardevice();
+	}
+
+	EndBatchDraw();
+
 	closegraph();
+
 }
