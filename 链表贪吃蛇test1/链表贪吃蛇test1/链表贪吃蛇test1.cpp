@@ -62,6 +62,7 @@ void iniSnake()
 		snakept_1->next = snakept_2->next;
 		snakept_2->next = snakept_1;
 		snakept_1->previous = snakept_2;
+		snakept_2 = snakept_1;
 	}
 
 }
@@ -93,13 +94,17 @@ void snakePaint()
 	setfillcolor(YELLOW);
 	fillcircle(point->x*SIZE+ SIZE / 2, point->y*SIZE+ SIZE / 2,SIZE/2);
 	point = point->next;
-	while (point->next!=NULL)
+	do
 	{
-		moveto(point->x*SIZE,point->y*SIZE);
+		moveto(point->x*SIZE, point->y*SIZE);
 		setfillcolor(LIGHTBLUE);
 		fillcircle(point->x*SIZE + SIZE / 2, point->y*SIZE + SIZE / 2, SIZE / 2);
 		point = point->next;
-	}
+	} while (point->next != NULL);
+	moveto(point->x*SIZE, point->y*SIZE);
+	setfillcolor(LIGHTBLUE);
+	fillcircle(point->x*SIZE + SIZE / 2, point->y*SIZE + SIZE / 2, SIZE / 2);
+	//point = point->next;
 	
 	
 	/*moveto(snake.x[0], snake.y[0]);
@@ -119,7 +124,7 @@ void welcomeUI()
 	loadimage(&img1, _T("G:\\图片\\Saved Pictures\\微信图片_20180808214022.jpg"));
 	putimage(0, 0, &img1);
 	MOUSEMSG m;
-	/*while (true)
+	while (true)
 	{
 		m = GetMouseMsg();
 		if (m.mkLButton)
@@ -127,7 +132,7 @@ void welcomeUI()
 			startup();
 			break;
 		}
-	}*/
+	}
 }
 //数据初始化函数
 void startup()
