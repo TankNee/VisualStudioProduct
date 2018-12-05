@@ -18,7 +18,7 @@
 #define FRAME_HEIGHTH 48
 #define DATAFRAME_WIDTH 48
 //上：1  下：2  左：3  右：4     
-int snakedir = 4;
+int snakedir =4;
 //函数声明
 void startup();
 //循环变量
@@ -200,7 +200,7 @@ void snakeMove()
 void getInput()
 {
 	char input;
-	if (_kbhit)
+	if (_kbhit())
 	{
 		input = _getch();
 		if (input == 'w')
@@ -223,6 +223,12 @@ void getInput()
 			snakedir = 4;
 			snakeMove();
 		}
+	}
+	else
+	{
+		Sleep(2000);
+		snakeMove();
+		
 	}
 }
 //游戏主函数

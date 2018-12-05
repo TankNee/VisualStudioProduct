@@ -1,154 +1,209 @@
-﻿#include<graphics.h>
+﻿#include<stdio.h>
+#include<Windows.h>
+#include "pch.h"
 #include<conio.h>
-#include<time.h>
-#include<math.h>
-#include<stdio.h>
-#include"pch.h"
 #include<stdlib.h>
-#pragma warning(disable:4996)
-#define radius 10
-#define height 600
-#define width 600
-#define movespeed 100
-typedef struct snake {
+#include<graphics.h>
+#include<time.h>
+#include <iostream>
+//宏定义
+#define LEFT  0x4B00
+#define RIGHT 0x4D00
+#define UP    0x4800
+#define DOWN  0x5000
+#define ESC   0x011B
+#define ENTER 0x1C0D
+#define SIZE 10
+#define GAMEFRAME_WIDTH 64
+#define FRAME_HEIGHTH 48
+#define DATAFRAME_WIDTH 48
+//函数声明
+void startup();
+//循环变量
+int i, j;
+//蛇身的长度
+int length = 4;
+//食物的结构体
+struct food
+{
 	int x;
 	int y;
-	snake *next;
-	snake *prior;
-}snake;
-typedef struct food {
+} food1;
+//毒药的结构体
+struct poison
+{
 	int x;
 	int y;
-	int color_x;
-	int color_y;
-	int color_z;
-	int food_radius;
-}food;
-food *foodl = new food;
-char direction, memory = 's';
-snake *p = new snake, *head = p, *tail = new snake, *delete_tail = new snake, *p1 = NULL;
-BOOL judge = false;
+}poison1;
+//蛇的结构体
+struct snakeNode
+{
+	int x;
+	int y;
+	int number;
+	struct snakeNode *previous = NULL;
+	struct snakeNode *next = NULL;
+} *snakept_1, *snakept_2, snake, *head;
+void iniSnake()
+{
+	head = (struct snakeNode *)malloc(sizeof(struct snakeNode));
+	head->number = 1;
+	head->next = NULL;
+	head->previous = NULL;
+	head->x = GAMEFRAME_WIDTH / 2;
+	head->y = FRAME_HEIGHTH / 2;
+	snakept_2 = head;
+	for (i = 2; i <= length; i++)
+	{
+		snakept_1 = (struct snakeNode *)malloc(sizeof(struct snakeNode));
+		snakept_1->number = i;
+		snakept_1->x = snakept_2->x - 1;
+		snakept_1->y = snakept_2->y;
+		snakept_1->next = snakept_2->next;
+		snakept_2->next = snakept_1;
+		snakept_1->previous = snakept_2;
+		snakept_2 = snakept_1;
+	}
 
-
-void foodcolor()
-{
-	foodl->color_x = rand() % 255;
-	foodl->color_y = rand() % 255;
-	foodl->color_z = rand() % 255;
-	setfillcolor(RGB(foodl->color_x, foodl->color_y, foodl->color_z));
-	solidcircle(foodl->x, foodl->y, radius);
 }
-void judgefood(snake *head)
+//毒药的生成
+void creatPoison()
 {
-	if (pow((double)(head->x - foodl->x), 2) + pow((double)(head->y - foodl->y), 2) <= pow(double(radius + radius), 2))
-	{
-		judge = true;
-		setfillcolor(BLACK);
-		solidcircle(foodl->x, foodl->y, radius);
-		foodl->x = rand() % (height - radius);
-		foodl->y = rand() % (width - radius) + radius;//初始化食物坐标
-	}
+	srand((unsigned)time(NULL));
+	poison1.x = (rand() * 100) % 53 + 1;
+	poison1.y = (rand() * 100) % 54 + 1;
+	moveto(poison1.x*SIZE, poison1.y*SIZE);
+	setfillcolor(GREEN);
+	fillcircle(poison1.x*SIZE + SIZE / 2, poison1.y*SIZE + SIZE / 2, SIZE / 2);
 }
-void showsnake(snake *head)
+//食物的生成
+void creatFood()
 {
-	snake *p = head;
-	while (p)
-	{
-		setfillcolor(YELLOW);
-		solidcircle(p->x, p->y, radius);
-		p = p->next;
-	}
+	srand((unsigned)time(NULL));
+	food1.x = (rand() * 100) % 34 + 1;
+	food1.y = (rand() * 100) % 15 + 1;
+	moveto(food1.x*SIZE, food1.y*SIZE);
+	setfillcolor(RED);
+	fillcircle(food1.x*SIZE + SIZE / 2, food1.y*SIZE + SIZE / 2, SIZE / 2);
 }
-void judgesnake()//判断蛇是否吃到食物
+void snakePaint()
 {
-	showsnake(head);
-	if (judge == false)
+	struct snakeNode *point;
+	point = head;
+	moveto(point->x*SIZE, point->y*SIZE);
+	setfillcolor(YELLOW);
+	fillcircle(point->x*SIZE + SIZE / 2, point->y*SIZE + SIZE / 2, SIZE / 2);
+	point = point->next;
+	while (point != NULL)
 	{
-		setfillcolor(BLACK);
-		solidcircle(delete_tail->x, delete_tail->y, radius);
-		delete_tail = delete_tail->prior; //删除尾节点
-		delete_tail->next = NULL;
-	}
-	else
-	{
-		judge = false;
+		moveto(point->x*SIZE, point->y*SIZE);
+		setfillcolor(LIGHTBLUE);
+		fillcircle(point->x*SIZE + SIZE / 2, point->y*SIZE + SIZE / 2, SIZE / 2);
+		point = point->next;
 	}
 }
-void boardcontrol()
+//初始化界面
+void welcomeUI()
 {
-	p1 = new snake; //开辟一个新节点
-	judgesnake();
-	Sleep(movespeed);
-	while (kbhit())
-		direction = getch();
-	if (direction == 'k')
-		system("pause");
-	if (direction == 'w' || direction == 's' || direction == 'a' || direction == 'd')
-		memory = direction;
-	else
+	IMAGE img1;
+	loadimage(&img1, _T("G:\\图片\\Saved Pictures\\微信图片_20180808214022.jpg"));
+	putimage(0, 0, &img1);
+	MOUSEMSG m;
+	while (true)
 	{
-		direction = memory;
+		m = GetMouseMsg();
+		if (m.mkLButton)
+		{
+			startup();
+			break;
+		}
 	}
-	switch (direction) //根据按键不同的方向 控制尾节点排在头结点的坐标位置 一次来判断蛇头的移动
+}
+//数据初始化函数
+void startup()
+{
+	//打印边框
+	for (i = 0; i < GAMEFRAME_WIDTH; i++)
+	{
+		moveto(i*SIZE, 0);
+		setfillcolor(BLUE);
+		fillrectangle(i*SIZE, 0, (i + 1)*SIZE, SIZE);
+		moveto(i*SIZE, (FRAME_HEIGHTH - 1)*SIZE);
+		setfillcolor(BLUE);
+		fillrectangle(i*SIZE, (FRAME_HEIGHTH - 1)*SIZE, (i + 1)*SIZE, (FRAME_HEIGHTH)*SIZE);
+	}
+	for (j = 0; j < FRAME_HEIGHTH; j++)
+	{
+		moveto(0, j*SIZE);
+		setfillcolor(BLUE);
+		fillrectangle(0, j*SIZE, SIZE, (j + 1)*SIZE);
+		moveto((GAMEFRAME_WIDTH - 1)*SIZE, j*SIZE);
+		setfillcolor(BLUE);
+		fillrectangle((GAMEFRAME_WIDTH - 1)*SIZE, j*SIZE, GAMEFRAME_WIDTH*SIZE, (j + 1)*SIZE);
+	}
+	//初始化蛇身
+	iniSnake();
+	//打印蛇身
+	snakePaint();
+	//打印食物与毒药
+	creatFood();
+	creatPoison();
+}
+//移动方法：新建一个头节点，删除一个尾节点
+void Move(char input)
+{
+	struct snakeNode *point;
+	point = (struct snakeNode *)malloc(sizeof(struct snakeNode));
+	point->x = head->x;
+	point->y = head->y;
+	point->number = 0;
+	point->next = head;
+	head->previous = point;
+	head = point;
+	while (point->next != NULL)
+	{
+		point = point->next;
+	}
+	free(point);
+	switch (input)
 	{
 	case 'w':
-	{
-		p1->x = head->x;
-		p1->y = head->y - 2 * radius; break;
-	}
-	case 's':
-	{
-		p1->x = head->x;
-		p1->y = head->y + 2 * radius; break;
-	}
+		head->y -= 1;
+		break;
 	case 'a':
-	{
-		p1->x = head->x - 2 * radius;
-		p1->y = head->y; break;
-	}
+		head->x -= 1;
+		break;
+	case 's':
+		head->y += 1;
+		break;
 	case 'd':
+		head->x += 1;
+		break;
+	default:
+		break;
+	}
+}
+void inputConcerned()
+{
+	char input;
+	if (_kbhit())
 	{
-		p1->x = head->x + 2 * radius;
-		p1->y = head->y; break;
+		input = _getch();
+		Move(input);
+		snakePaint();
 	}
-	default:break;
-	}
-	p1->next = head;
-	head->prior = p1; //p1成为头结点
-	head = p1;
-	showsnake(head);
-	FlushBatchDraw();
 }
-void initsnake()//把最开始的是三个节点连接起来
+//主函数
+int main()
 {
-	p->x = 200;
-	p->y = 200;
-	tail->x = 200 + 2 * radius;
-	tail->y = 200;
-	delete_tail->x = tail->x + 2 * radius;
-	delete_tail->y = 200;//给最开始蛇三个节点的坐标赋值
-	delete_tail->next = NULL;
-	p->next = tail;
-	tail->next = delete_tail; //三个节点坐标的地址前后相互连接起来
-	tail->prior = p;
-	delete_tail->prior = tail;
-}
-void main()
-{
-	foodl->x = rand() % (height - radius);
-	foodl->y = rand() % (width - radius) + radius;//初始化食物坐标
-	head = p;
-	initgraph(height, width);
-	initsnake();
-	showsnake(head);
-	char c = getch();
-	BeginBatchDraw();//开始批量绘图操作
+	initgraph(1120, 480);
+	//welcomeUI();
+	startup();
 	while (1)
 	{
-		foodcolor();
-		judgefood(head);
-		boardcontrol();
+		Move;
+		inputConcerned;
 	}
-	EndBatchDraw();//结束批量绘图操作
+	getchar();
 	closegraph();
 }
