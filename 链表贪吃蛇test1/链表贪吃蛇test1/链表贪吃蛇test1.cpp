@@ -206,27 +206,27 @@ void getInput()
 		if (input == 'w')
 		{
 			snakedir = 1;
-			snakeMove();
+			
 		}
 		else if(input=='s')
 		{
 			snakedir = 2;
-			snakeMove();
+			
 		}
 		else if (input == 'a')
 		{
 			snakedir = 3;
-			snakeMove();
+			
 		}
 		else if(input=='d')
 		{
 			snakedir = 4;
-			snakeMove();
+			
 		}
 	}
 	else
 	{
-		Sleep(2000);
+		Sleep(150);
 		snakeMove();
 		
 	}
@@ -245,14 +245,9 @@ void startGame()
 int main()
 {
 	initgraph(1120, 480);	
-	//welcomeUI();
+	welcomeUI();
 	startup();
 	startGame();
-	/*while (1)
-	{
-		inputConcerned;
-		Move;		
-	}*/
 	getchar();
 	closegraph();
 }	
