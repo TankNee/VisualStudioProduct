@@ -19,8 +19,6 @@
 #define DATAFRAME_WIDTH 48
 //上：1  下：2  左：3  右：4     
 int snakedir =4;
-//函数声明
-void startup();
 //循环变量
 int i, j;
 //蛇身的长度
@@ -48,6 +46,19 @@ typedef struct snakeNode
 	struct snakeNode *next=NULL;
 } snakenode;
 snakenode *head;
+//炸弹的结构体
+struct boom
+{
+	int x;
+	int y;
+}boom1;
+struct smartFood
+{
+	int x;
+	int y;
+}smartfood1;
+//函数声明
+void startup();
 int checkMove(snakenode *checkpoint);
 void iniSnake()
 {
@@ -74,9 +85,10 @@ void iniSnake()
 void creatPoison()
 {
 	srand((unsigned)time(NULL));
-	poison1.x = (rand() * 100) % 53 + 1;
-	poison1.y = (rand() * 100) % 54 + 1;
+	poison1.x = (rand() * 100) % 53 + 15;
+	poison1.y = (rand() * 100) % 54 + 10;
 	moveto(poison1.x*SIZE, poison1.y*SIZE);
+	setlinecolor(WHITE);
 	setfillcolor(GREEN);
 	fillcircle(poison1.x*SIZE + SIZE / 2, poison1.y*SIZE + SIZE / 2, SIZE / 2);
 }
@@ -84,11 +96,23 @@ void creatPoison()
 void creatFood()
 {
 	srand((unsigned)time(NULL));
-	food1.x = (rand() * 100) % 34 + 1;
-	food1.y = (rand() * 100) % 15 + 1;
+	food1.x = (rand() * 100) % 65 + 1;
+	food1.y = (rand() * 100) % 65 + 1;
 	moveto(food1.x*SIZE, food1.y*SIZE);
+	setlinecolor(WHITE);
 	setfillcolor(RED);
 	fillcircle(food1.x*SIZE + SIZE / 2, food1.y*SIZE + SIZE / 2, SIZE / 2);
+}
+//炸弹的生成
+void creatBoom()
+{
+	srand((unsigned)time(NULL));
+	boom1.x = (rand() * 100) % 54 + 7;
+	boom1.y = (rand() * 100) % 48 + 13;
+	moveto(boom1.x*SIZE, boom1.y*SIZE);
+	setlinecolor(WHITE);
+	setfillcolor(LIGHTGRAY);
+	fillcircle(boom1.x*SIZE + SIZE / 2, boom1.y*SIZE + SIZE / 2, SIZE / 2);
 }
 void coverAndClear(snakenode *pt)
 {
@@ -134,7 +158,7 @@ void welcomeUI()
 		}
 	}
 }
-void starGameUI()
+void startGameUI()
 {
 	IMAGE img1;
 	MOUSEMSG m;
@@ -146,6 +170,11 @@ void starGameUI()
 
 		}
 	}
+}
+void endGameUI()
+{
+	IMAGE img1;
+	MOUSEMSG m;
 }
 //数据初始化函数
 void startup()
@@ -173,9 +202,10 @@ void startup()
 	iniSnake();
 	//打印蛇身
 	snakePaint();
-	//打印食物与毒药
+	//打印食物、毒药和炸弹
 	creatFood();
 	creatPoison();
+	creatBoom();
 }
 //蛇移动函数
 //移动方法：新建一个头节点，删除一个尾节点
@@ -208,11 +238,13 @@ void snakeMove()
 	check = checkMove(head);
 	if (check == 1)
 	{
+		length++;
 		creatFood();
 		return;
 	}
 	else if (check == 2)
 	{
+		length--;
 		while (temp->next->next != NULL)
 		{
 			temp = temp->next;
@@ -227,6 +259,28 @@ void snakeMove()
 		creatPoison();
 	}
 	else if (check == 3)
+	{
+		int len;
+		len = length / 2;
+		while (temp->next->next != NULL)
+		{
+			temp = temp->next;
+		}
+		if (len == 0)
+		{
+			system("pause");
+			exit(0);
+		}
+		for (i = 0; i <= len; i++)
+		{
+			coverAndClear(temp->next);
+			free(temp->next);
+			temp->next = NULL;
+			temp = temp->previous;
+		}
+		creatBoom();
+	}
+	else if (check == 4)
 	{
 		system("pause");
 		Sleep(3000);
@@ -253,9 +307,17 @@ int checkMove(snakenode *checkpoint)//检查函数，判断蛇的移动是否合
 	{
 		return 2;
 	}
-	else if (checkpoint->x == 0 || checkpoint->x == 64 || checkpoint->y == 0 || checkpoint->y == 48)
+	else if (checkpoint->x == boom1.x&&checkpoint->y == boom1.y)
 	{
 		return 3;
+	}
+	else if (checkpoint->x == 0 || checkpoint->x == 64 || checkpoint->y == 0 || checkpoint->y == 48)
+	{
+		return 4;
+	}
+	else if (checkpoint->x == smartfood1.x&&checkpoint->y ==smartfood1.y)
+	{
+		return 5;
 	}
 	else
 	{
@@ -327,7 +389,7 @@ void startGame()
 int main()
 {
 	initgraph(1120, 480);	
-	welcomeUI();
+	//welcomeUI();
 	startup();
 	startGame();
 	getchar(); 
