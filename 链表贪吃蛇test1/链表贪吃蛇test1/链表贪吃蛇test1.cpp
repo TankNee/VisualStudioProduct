@@ -7,12 +7,6 @@
 #include<time.h>
 #include <iostream>
 //宏定义
-#define LEFT  0x4B00
-#define RIGHT 0x4D00
-#define UP    0x4800
-#define DOWN  0x5000
-#define ESC   0x011B
-#define ENTER 0x1C0D
 #define SIZE 10
 #define GAMEFRAME_WIDTH 64
 #define FRAME_HEIGHTH 48
@@ -114,6 +108,16 @@ void creatBoom()
 	setfillcolor(LIGHTGRAY);
 	fillcircle(boom1.x*SIZE + SIZE / 2, boom1.y*SIZE + SIZE / 2, SIZE / 2);
 }
+void creatSmartFood()
+{
+	srand((unsigned)time(NULL));
+	smartfood1.x = (rand() * 100) % 54 + 7;
+	smartfood1.y = (rand() * 100) % 48 + 13;
+	moveto(smartfood1.x*SIZE, smartfood1.y*SIZE);
+	setlinecolor(WHITE);
+	setfillcolor(LIGHTCYAN);
+	fillcircle(smartfood1.x*SIZE + SIZE / 2, smartfood1.y*SIZE + SIZE / 2, SIZE / 2);
+}
 void coverAndClear(snakenode *pt)
 {
 	snakenode *temp;
@@ -202,9 +206,10 @@ void startup()
 	iniSnake();
 	//打印蛇身
 	snakePaint();
-	//打印食物、毒药和炸弹
+	//打印各类道具
 	creatFood();
 	creatPoison();
+	creatSmartFood();
 	creatBoom();
 }
 //蛇移动函数
@@ -285,6 +290,138 @@ void snakeMove()
 		system("pause");
 		Sleep(3000);
 		exit(0);
+	}
+	else if (check == 5)
+	{
+		int food_x, food_y;
+		food_x = food1.x;
+		food_y = food1.y;
+		temp_x = head->x;
+		temp_y = head->y;
+		if ((temp_x - food_x)*(temp_y - food_y) >= 0)
+		{
+			if (temp_x - food_x >= 0)
+			{
+				if (snakedir == 3 || snakedir == 4)
+				{
+					while (head->y!=food_y)
+					{
+						snakedir = 1;
+						snakeMove();
+					}
+					while (head->x != food_x)
+					{
+						snakedir = 3;
+						snakeMove();
+					}
+				}
+				else
+				{
+					while (head->x != food_x)
+					{
+						snakedir = 3;
+						snakeMove();
+					}
+					while (head->y != food_y)
+					{
+						snakedir = 1;
+						snakeMove();
+					}
+				}
+			}
+			else
+			{
+				if (snakedir == 3 || snakedir == 4)
+				{
+					while (head->y != food_y)
+					{
+						snakedir = 2;
+						snakeMove();
+					}
+					while (head->x != food_x)
+					{
+						snakedir = 4;
+						snakeMove();
+					}
+				}
+				else
+				{
+					while (head->x != food_x)
+					{
+						snakedir = 4;
+						snakeMove();
+					}
+					while (head->y != food_y)
+					{
+						snakedir = 2;
+						snakeMove();
+					}
+
+				}
+			}
+		}
+		else
+		{
+			if (temp_x - food_x >= 0)
+			{
+				if (snakedir == 3 || snakedir == 4)
+				{
+					while (head->y != food_y)
+					{
+						snakedir = 2;
+						snakeMove();
+					}
+					while (head->x != food_x)
+					{
+						snakedir = 3;
+						snakeMove();
+					}
+				}
+				else
+				{
+					while (head->x != food_x)
+					{
+						snakedir = 3;
+						snakeMove();
+					}
+					while (head->y != food_y)
+					{
+						snakedir = 2;
+						snakeMove();
+					}
+				}
+			}
+			else
+			{
+				if (snakedir == 3 || snakedir == 4)
+				{
+					while (head->y != food_y)
+					{
+						snakedir = 1;
+						snakeMove();
+					}
+					while (head->x != food_x)
+					{
+						snakedir = 4;
+						snakeMove();
+					}
+				}
+				else
+				{
+					while (head->x != food_x)
+					{
+						snakedir = 4;
+						snakeMove();
+					}
+					while (head->y != food_y)
+					{
+						snakedir = 1;
+						snakeMove();
+					}
+				}
+			}
+		}
+
 	}
 	else if (check == 0)
 	{
