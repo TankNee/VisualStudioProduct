@@ -25,6 +25,8 @@ void startup();
 int i, j;
 //蛇身的长度
 int length=4;
+//速度控制变量
+int  sleeptime = 100;
 //食物的结构体
 struct food
 {
@@ -46,6 +48,7 @@ typedef struct snakeNode
 	struct snakeNode *next=NULL;
 } snakenode;
 snakenode *head;
+int checkMove(snakenode *checkpoint);
 void iniSnake()
 {
 	snakenode *snakept_1,*snakept_2;
@@ -131,6 +134,19 @@ void welcomeUI()
 		}
 	}
 }
+void starGameUI()
+{
+	IMAGE img1;
+	MOUSEMSG m;
+	while (true)
+	{
+		m = GetMouseMsg();
+		if (m.x)//尚未完成，这里匹配的难度选择关卡
+		{
+
+		}
+	}
+}
 //数据初始化函数
 void startup()
 {
@@ -165,6 +181,7 @@ void startup()
 //移动方法：新建一个头节点，删除一个尾节点
 void snakeMove()
 {
+	int check;
 	int temp_x = head->x, temp_y = head->y;
 	if (snakedir == 1)
 	{
@@ -188,47 +205,112 @@ void snakeMove()
 	temp->next = head->next;
 	head->next->previous = temp;//将新的第二节与第三节连接
 	head->next = temp;//将新的头部与第二节相连
-	while (temp->next->next != NULL)
+	check = checkMove(head);
+	if (check == 1)
 	{
-		temp = temp->next;
+		creatFood();
+		return;
 	}
-	coverAndClear(temp->next);
-	free(temp->next);
-	temp->next = NULL;
+	else if (check == 2)
+	{
+		while (temp->next->next != NULL)
+		{
+			temp = temp->next;
+		}
+		coverAndClear(temp->next);
+		free(temp->next);
+		temp->next = NULL;
+		temp = temp->previous;
+		coverAndClear(temp->next);
+		free(temp->next);
+		temp->next = NULL;
+		creatPoison();
+	}
+	else if (check == 3)
+	{
+		system("pause");
+		Sleep(3000);
+		exit(0);
+	}
+	else if (check == 0)
+	{
+		while (temp->next->next != NULL)
+		{
+			temp = temp->next;
+		}
+		coverAndClear(temp->next);
+		free(temp->next);
+		temp->next = NULL;
+	}
+}
+int checkMove(snakenode *checkpoint)//检查函数，判断蛇的移动是否合法
+{
+	if (checkpoint->x == food1.x&&checkpoint->y == food1.y)
+	{
+		return 1;
+	}
+	else if (checkpoint->x == poison1.x&&checkpoint->y == poison1.y)
+	{
+		return 2;
+	}
+	else if (checkpoint->x == 0 || checkpoint->x == 64 || checkpoint->y == 0 || checkpoint->y == 48)
+	{
+		return 3;
+	}
+	else
+	{
+		return 0;
+	}
 }
 //获取用户输入
 void getInput()
 {
-	char input;
+	int input;
+	int key;
 	if (_kbhit())
 	{
 		input = _getch();
-		if (input == 'w')
+		if (input == 119||input==87)//119  w
 		{
-			snakedir = 1;
-			
+			snakedir = 1;			
 		}
-		else if(input=='s')
+		else if(input==115||input==83)//115  s
 		{
-			snakedir = 2;
-			
+			snakedir = 2;			
 		}
-		else if (input == 'a')
+		else if (input == 97||input==65)//97  a  
 		{
 			snakedir = 3;
-			
 		}
-		else if(input=='d')
+		else if(input==100||input==68)//100  d
 		{
 			snakedir = 4;
-			
 		}
-	}
+		else if (input == 224)
+		{
+			key = _getch();
+			if (key == 72)//上键
+			{
+				snakedir = 1;
+			}
+			else if (key == 80)//下键
+			{
+				snakedir = 2;
+			}
+			else if (key == 75)//左键
+			{
+				snakedir = 3;
+			}
+			else if (key == 77)//右键
+			{
+				snakedir = 4;
+			}
+		}
+	}//控制蛇的移动，基本已完成！
 	else
 	{
-		Sleep(150);
+		Sleep(sleeptime);
 		snakeMove();
-		
 	}
 }
 //游戏主函数
@@ -248,6 +330,6 @@ int main()
 	welcomeUI();
 	startup();
 	startGame();
-	getchar();
+	getchar(); 
 	closegraph();
 }	
