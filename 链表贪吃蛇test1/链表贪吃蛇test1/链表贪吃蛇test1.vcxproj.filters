@@ -13,6 +13,9 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="资源文件\数字素材">
+      <UniqueIdentifier>{672fe70a-db92-43fb-a6fb-b7f3ad75671a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h">
@@ -29,6 +32,39 @@
   </ItemGroup>
   <ItemGroup>
     <Image Include="G:\图片\Saved Pictures\微信图片_20180808214022.jpg">
+      <Filter>资源文件</Filter>
+    </Image>
+    <Image Include="G:\图片\Saved Pictures\贪吃蛇游戏素材\数字素材\0.png">
+      <Filter>资源文件\数字素材</Filter>
+    </Image>
+    <Image Include="G:\图片\Saved Pictures\贪吃蛇游戏素材\数字素材\1.png">
+      <Filter>资源文件\数字素材</Filter>
+    </Image>
+    <Image Include="G:\图片\Saved Pictures\贪吃蛇游戏素材\数字素材\2.png">
+      <Filter>资源文件\数字素材</Filter>
+    </Image>
+    <Image Include="G:\图片\Saved Pictures\贪吃蛇游戏素材\数字素材\3.png">
+      <Filter>资源文件\数字素材</Filter>
+    </Image>
+    <Image Include="G:\图片\Saved Pictures\贪吃蛇游戏素材\数字素材\4.png">
+      <Filter>资源文件\数字素材</Filter>
+    </Image>
+    <Image Include="G:\图片\Saved Pictures\贪吃蛇游戏素材\数字素材\5.png">
+      <Filter>资源文件\数字素材</Filter>
+    </Image>
+    <Image Include="G:\图片\Saved Pictures\贪吃蛇游戏素材\数字素材\6.png">
+      <Filter>资源文件\数字素材</Filter>
+    </Image>
+    <Image Include="G:\图片\Saved Pictures\贪吃蛇游戏素材\数字素材\7.png">
+      <Filter>资源文件\数字素材</Filter>
+    </Image>
+    <Image Include="G:\图片\Saved Pictures\贪吃蛇游戏素材\数字素材\8.png">
+      <Filter>资源文件\数字素材</Filter>
+    </Image>
+    <Image Include="G:\图片\Saved Pictures\贪吃蛇游戏素材\数字素材\9.png">
+      <Filter>资源文件\数字素材</Filter>
+    </Image>
+    <Image Include="G:\图片\Saved Pictures\贪吃蛇游戏素材\没有计分板的右侧图片-2.png">
       <Filter>资源文件</Filter>
     </Image>
   </ItemGroup>

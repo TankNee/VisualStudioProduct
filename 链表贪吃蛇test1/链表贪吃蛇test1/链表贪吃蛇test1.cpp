@@ -11,6 +11,10 @@
 #define GAMEFRAME_WIDTH 64
 #define FRAME_HEIGHTH 48
 #define DATAFRAME_WIDTH 48
+//数字1~9
+IMAGE number[10];
+//分数  基准分数为0   食物的基准分数为5  毒药基准分数为-10 
+int score=0, foodscore=5,poisonscore=-10;
 //上：1  下：2  左：3  右：4     
 int snakedir =4;
 //循环变量
@@ -56,6 +60,7 @@ void startup();
 int checkMove(snakenode *checkpoint);
 int checkProp();
 void datashow();
+void endGameUI();
 void iniSnake()
 {
 	snakenode *snakept_1,*snakept_2;
@@ -178,11 +183,33 @@ void welcomeUI()
 }
 void dataShow()
 {
-	moveto(80 * SIZE, 5 * SIZE);
-	setcolor(YELLOW);
-	settextcolor(GREEN);
-	RECT r = {800,50,1000,70};
-	drawtext(_T("贪吃蛇"), &r, DT_CENTER);
+	IMAGE img1;
+	loadimage(&img1, _T("G:\\图片\\Saved Pictures\\贪吃蛇游戏素材\\没有计分板的右侧图片-2.png"));
+	putimage(640,0,&img1);
+	loadimage(&number[0], _T("G:\\图片\\Saved Pictures\\贪吃蛇游戏素材\\数字素材\\0.png"));
+	loadimage(&number[1], _T("G:\\图片\\Saved Pictures\\贪吃蛇游戏素材\\数字素材\\1.png"));
+	loadimage(&number[2], _T("G:\\图片\\Saved Pictures\\贪吃蛇游戏素材\\数字素材\\2.png"));
+	loadimage(&number[3], _T("G:\\图片\\Saved Pictures\\贪吃蛇游戏素材\\数字素材\\3.png"));
+	loadimage(&number[4], _T("G:\\图片\\Saved Pictures\\贪吃蛇游戏素材\\数字素材\\4.png"));
+	loadimage(&number[5], _T("G:\\图片\\Saved Pictures\\贪吃蛇游戏素材\\数字素材\\5.png"));
+	loadimage(&number[6], _T("G:\\图片\\Saved Pictures\\贪吃蛇游戏素材\\数字素材\\6.png"));
+	loadimage(&number[7], _T("G:\\图片\\Saved Pictures\\贪吃蛇游戏素材\\数字素材\\7.png"));
+	loadimage(&number[8], _T("G:\\图片\\Saved Pictures\\贪吃蛇游戏素材\\数字素材\\8.png"));
+	loadimage(&number[9], _T("G:\\图片\\Saved Pictures\\贪吃蛇游戏素材\\数字素材\\9.png"));
+	int bit_1, bit_2, bit_3;
+	if (score >= 0)
+	{
+		bit_1 = score / 100;
+		bit_2 = (score / 10) % 10;
+		bit_3 = score % 10;
+		putimage(790, 436, &number[bit_1]);
+		putimage(807, 436, &number[bit_2]);
+		putimage(824, 436, &number[bit_3]);
+	}
+	else
+	{
+		endGameUI();
+	}
 
 }
 void startGameUI()
@@ -202,6 +229,7 @@ void endGameUI()
 {
 	IMAGE img1;
 	MOUSEMSG m;
+	system("pause");
 }
 //数据初始化函数
 void startup()
@@ -446,12 +474,6 @@ void snakeMove()
 		}
 
 	}
-	else if (check == -1)
-	{
-	system("pause");
-	Sleep(3000);
-	exit(0);
-    }
 	else if (check == 0)
 	{
 		while (temp->next->next != NULL)
@@ -467,17 +489,23 @@ int checkMove(snakenode *checkpoint)//检查函数，判断蛇的移动是否合
 {
 	if (checkpoint->x == food1.x&&checkpoint->y == food1.y)
 	{
+		score += foodscore;
+		sleeptime -= 4;
 		return 1;
 	}
 	else if (checkpoint->x == poison1.x&&checkpoint->y == poison1.y)
 	{
+		score += poisonscore;
+		sleeptime += 2;
 		return 2;
 	}
 	else if (checkpoint->x == boom1.x&&checkpoint->y == boom1.y)
 	{
+		score -= 3 * (length / 2);
+		sleeptime += 10;
 		return 3;
 	}
-	else if (checkpoint->x == 0 || checkpoint->x == 63 || checkpoint->y == 0 || checkpoint->y == 48)
+	else if (checkpoint->x == 0 || checkpoint->x == 63 || checkpoint->y == 0 || checkpoint->y == 47)
 	{
 		return 4;
 	}
@@ -502,6 +530,10 @@ int checkMove(snakenode *checkpoint)//检查函数，判断蛇的移动是否合
 		}
 		checkpoint = checkpoint->next;
 	}
+}
+int biteItself()
+{
+	return 0;
 }
 //道具检查函数，检查是否生成在同一位置
 int checkProp()
