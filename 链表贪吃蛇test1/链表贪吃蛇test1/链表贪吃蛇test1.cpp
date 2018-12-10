@@ -54,6 +54,8 @@ struct smartFood
 //函数声明
 void startup();
 int checkMove(snakenode *checkpoint);
+int checkProp();
+void datashow();
 void iniSnake()
 {
 	snakenode *snakept_1,*snakept_2;
@@ -79,8 +81,12 @@ void iniSnake()
 void creatPoison()
 {
 	srand((unsigned)time(NULL));
-	poison1.x = (rand() * 100) % 53 + 15;
-	poison1.y = (rand() * 100) % 54 + 10;
+	poison1.x =rand() % 48 + 15;
+	poison1.y = rand()  % 37 + 10;
+	if (checkProp() == 1 || checkProp() == 2)
+	{
+		creatPoison();
+	}
 	moveto(poison1.x*SIZE, poison1.y*SIZE);
 	setlinecolor(WHITE);
 	setfillcolor(GREEN);
@@ -90,8 +96,12 @@ void creatPoison()
 void creatFood()
 {
 	srand((unsigned)time(NULL));
-	food1.x = (rand() * 100) % 65 + 1;
-	food1.y = (rand() * 100) % 65 + 1;
+	food1.x = rand() % 56 + 7;
+	food1.y = rand()  % 44 + 3;
+	if (checkProp()==1||checkProp()==3)
+	{
+		creatFood();
+	}
 	moveto(food1.x*SIZE, food1.y*SIZE);
 	setlinecolor(WHITE);
 	setfillcolor(RED);
@@ -101,8 +111,12 @@ void creatFood()
 void creatBoom()
 {
 	srand((unsigned)time(NULL));
-	boom1.x = (rand() * 100) % 54 + 7;
-	boom1.y = (rand() * 100) % 48 + 13;
+	boom1.x = rand()  % 54 + 7;
+	boom1.y = rand()  % 34 + 13;
+	if (checkProp() == 2 || checkProp() == 3)
+	{
+		creatBoom();
+	}
 	moveto(boom1.x*SIZE, boom1.y*SIZE);
 	setlinecolor(WHITE);
 	setfillcolor(LIGHTGRAY);
@@ -111,8 +125,8 @@ void creatBoom()
 void creatSmartFood()
 {
 	srand((unsigned)time(NULL));
-	smartfood1.x = (rand() * 100) % 54 + 7;
-	smartfood1.y = (rand() * 100) % 48 + 13;
+	smartfood1.x = rand()  % 54 + 7;
+	smartfood1.y = rand()  % 46 + 1;
 	moveto(smartfood1.x*SIZE, smartfood1.y*SIZE);
 	setlinecolor(WHITE);
 	setfillcolor(LIGHTCYAN);
@@ -161,6 +175,15 @@ void welcomeUI()
 			break;
 		}
 	}
+}
+void dataShow()
+{
+	moveto(80 * SIZE, 5 * SIZE);
+	setcolor(YELLOW);
+	settextcolor(GREEN);
+	RECT r = {800,50,1000,70};
+	drawtext(_T("贪吃蛇"), &r, DT_CENTER);
+
 }
 void startGameUI()
 {
@@ -423,6 +446,12 @@ void snakeMove()
 		}
 
 	}
+	else if (check == -1)
+	{
+	system("pause");
+	Sleep(3000);
+	exit(0);
+    }
 	else if (check == 0)
 	{
 		while (temp->next->next != NULL)
@@ -448,13 +477,46 @@ int checkMove(snakenode *checkpoint)//检查函数，判断蛇的移动是否合
 	{
 		return 3;
 	}
-	else if (checkpoint->x == 0 || checkpoint->x == 64 || checkpoint->y == 0 || checkpoint->y == 48)
+	else if (checkpoint->x == 0 || checkpoint->x == 63 || checkpoint->y == 0 || checkpoint->y == 48)
 	{
 		return 4;
 	}
 	else if (checkpoint->x == smartfood1.x&&checkpoint->y ==smartfood1.y)
 	{
 		return 5;
+	}
+	else
+	{
+		return 0;
+	}
+	checkpoint = head->next;
+	while (true)
+	{
+		if (head->x == checkpoint->x&&head->y == checkpoint->y)
+		{
+			return -1;
+		}
+		else if (checkpoint->next == NULL)
+		{
+			break;
+		}
+		checkpoint = checkpoint->next;
+	}
+}
+//道具检查函数，检查是否生成在同一位置
+int checkProp()
+{
+	if (food1.x == poison1.x&&food1.y == poison1.y)
+	{
+		return 1;
+	}
+	else if (boom1.x == poison1.x&&boom1.y == poison1.y)
+	{
+		return 2;
+	}
+	else if (boom1.x == food1.x&&boom1.y == food1.y)
+	{
+		return 3;
 	}
 	else
 	{
@@ -520,6 +582,7 @@ void startGame()
 	{
 		getInput();
 		snakePaint();
+		dataShow();
 	}
 }
 //主函数
