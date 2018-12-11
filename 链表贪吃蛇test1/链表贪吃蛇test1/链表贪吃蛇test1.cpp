@@ -15,6 +15,8 @@
 IMAGE number[10];
 //分数  基准分数为0   食物的基准分数为5  毒药基准分数为-10 
 int score=0, foodscore=5,poisonscore=-10;
+//难度变量
+int level = 5;
 //上：1  下：2  左：3  右：4     
 int snakedir =4;
 //循环变量
@@ -22,7 +24,7 @@ int i, j;
 //蛇身的长度
 int length=4;
 //速度控制变量
-int  sleeptime = 100;
+int  sleeptime = 150-level*10;
 //食物的结构体
 struct food
 {
@@ -61,6 +63,8 @@ int checkMove(snakenode *checkpoint);
 int checkProp();
 void datashow();
 void endGameUI();
+void startGame();
+void levelUI();
 void iniSnake()
 {
 	snakenode *snakept_1,*snakept_2;
@@ -167,17 +171,87 @@ void snakePaint()
 //初始化界面
 void welcomeUI()
 {
-	IMAGE img1;
-	loadimage(&img1, _T("G:\\图片\\Saved Pictures\\微信图片_20180808214022.jpg"));
+	IMAGE img1,img2,img3,img4,img5;
+	loadimage(&img1, _T("G:\\图片\\Saved Pictures\\贪吃蛇游戏素材\\开始界面-1.png"));
 	putimage(0, 0, &img1);
+	loadimage(&img2, _T("G:\\图片\\Saved Pictures\\贪吃蛇游戏素材\\难度选择-1.png"));
+	loadimage(&img3, _T("G:\\图片\\Saved Pictures\\贪吃蛇游戏素材\\开始界面素材\\开始游戏-1.png"));
+	loadimage(&img4, _T("G:\\图片\\Saved Pictures\\贪吃蛇游戏素材\\开始界面素材\\继续游戏-1.png"));
+	loadimage(&img5, _T("G:\\图片\\Saved Pictures\\贪吃蛇游戏素材\\开始界面素材\\退出游戏-1.png"));
 	MOUSEMSG m;
 	while (true)
 	{
 		m = GetMouseMsg();
-		if (m.mkLButton)
+		if (m.x >= 359 && m.x <= 697)
 		{
-			startup();
-			break;
+			if (m.y >= 173 && m.y <= 240)//第1个按钮
+			{
+				putimage(0, 0, &img3);
+				if (m.mkLButton)
+				{
+					putimage(0, 0, &img2);
+					levelUI();
+					break;
+				}
+			}
+			if (m.y >= 269 && m.y <= 337)//第2个按钮
+			{
+				putimage(0, 0, &img4);
+			}
+			if (m.y >= 367 && m.y <= 434)//第3个按钮
+			{
+				putimage(0, 0, &img5);
+				if (m.mkLButton)
+				{
+					exit(0);
+				}
+			}
+		}
+	}
+}
+void levelUI()
+{
+	IMAGE img1, img2, img3,mouse;
+	loadimage(&img1, _T("G:\\图片\\Saved Pictures\\贪吃蛇游戏素材\\难度关卡素材\\简单-1.png"));
+	loadimage(&img2, _T("G:\\图片\\Saved Pictures\\贪吃蛇游戏素材\\难度关卡素材\\普通-1.png"));
+	loadimage(&img3, _T("G:\\图片\\Saved Pictures\\贪吃蛇游戏素材\\难度关卡素材\\困难-1.png"));
+	loadimage(&mouse, _T("G:\\图片\\Saved Pictures\\贪吃蛇游戏素材\\鼠标素材-3.png"));
+	MOUSEMSG m;
+	while (true)
+	{
+		m = GetMouseMsg();
+		if (m.x >= 359 && m.x <= 697)
+		{
+			if (m.y >= 173 && m.y <= 240)//第1个按钮
+			{
+				putimage(0, 0, &img1);
+				if (m.mkLButton)
+				{
+					level = 3;
+					startup();
+					break;
+				}
+			}
+			if (m.y >= 269 && m.y <= 337)//第2个按钮
+			{
+				putimage(0, 0, &img2);
+				if (m.mkLButton)
+				{
+					level = 5;
+					startup();
+					break;
+				}
+			}
+			if (m.y >= 367 && m.y <= 434)//第3个按钮
+			{
+				putimage(0, 0, &img3);
+				if (m.mkLButton)
+				{
+					level = 8;
+					startup();
+					break;
+				}
+			}
 		}
 	}
 }
@@ -359,11 +433,13 @@ void snakeMove()
 					{
 						snakedir = 1;
 						snakeMove();
+						Sleep(sleeptime);
 					}
 					while (head->x != food_x)
 					{
 						snakedir = 3;
 						snakeMove();
+						Sleep(sleeptime);
 					}
 				}
 				else
@@ -372,11 +448,13 @@ void snakeMove()
 					{
 						snakedir = 3;
 						snakeMove();
+						Sleep(sleeptime);
 					}
 					while (head->y != food_y)
 					{
 						snakedir = 1;
 						snakeMove();
+						Sleep(sleeptime);
 					}
 				}
 			}
@@ -388,11 +466,13 @@ void snakeMove()
 					{
 						snakedir = 2;
 						snakeMove();
+						Sleep(sleeptime);
 					}
 					while (head->x != food_x)
 					{
 						snakedir = 4;
 						snakeMove();
+						Sleep(sleeptime);
 					}
 				}
 				else
@@ -401,11 +481,13 @@ void snakeMove()
 					{
 						snakedir = 4;
 						snakeMove();
+						Sleep(sleeptime);
 					}
 					while (head->y != food_y)
 					{
 						snakedir = 2;
 						snakeMove();
+						Sleep(sleeptime);
 					}
 
 				}
@@ -421,11 +503,13 @@ void snakeMove()
 					{
 						snakedir = 2;
 						snakeMove();
+						Sleep(sleeptime);
 					}
 					while (head->x != food_x)
 					{
 						snakedir = 3;
 						snakeMove();
+						Sleep(sleeptime);
 					}
 				}
 				else
@@ -434,11 +518,13 @@ void snakeMove()
 					{
 						snakedir = 3;
 						snakeMove();
+						Sleep(sleeptime);
 					}
 					while (head->y != food_y)
 					{
 						snakedir = 2;
 						snakeMove();
+						Sleep(sleeptime);
 					}
 				}
 			}
@@ -450,11 +536,13 @@ void snakeMove()
 					{
 						snakedir = 1;
 						snakeMove();
+						Sleep(sleeptime);
 					}
 					while (head->x != food_x)
 					{
 						snakedir = 4;
 						snakeMove();
+						Sleep(sleeptime);
 					}
 				}
 				else
@@ -463,11 +551,13 @@ void snakeMove()
 					{
 						snakedir = 4;
 						snakeMove();
+						Sleep(sleeptime);
 					}
 					while (head->y != food_y)
 					{
 						snakedir = 1;
 						snakeMove();
+						Sleep(sleeptime);
 					}
 				}
 			}
@@ -621,7 +711,7 @@ void startGame()
 int main()
 {
 	initgraph(1120, 480);	
-	//welcomeUI();
+	welcomeUI();
 	startup();
 	startGame();
 	getchar(); 
