@@ -143,28 +143,58 @@ void creatSmartFood()
 }
 void coverAndClear(snakenode *pt)
 {
+	IMAGE img1;
+	loadimage(&img1, _T("G:\\图片\\Saved Pictures\\贪吃蛇游戏素材\\游戏背景素材\\蛇身遮盖素材.png"));
 	snakenode *temp;
 	temp = pt;
 	moveto(temp->x*SIZE, temp->y*SIZE);
-	setfillcolor(BLACK);
-	setlinecolor(BLACK);
-	fillcircle(temp->x*SIZE + SIZE / 2, temp->y*SIZE + SIZE / 2, SIZE / 2);
+	setfillcolor(WHITE);
+	setlinecolor(WHITE);
+	//fillcircle(temp->x*SIZE + SIZE / 2, temp->y*SIZE + SIZE / 2, SIZE / 2);
+	putimage(temp->x*SIZE, temp->y*SIZE, &img1);
+
 }
 void snakePaint()
 {
+	IMAGE headpicL, headpicR, headpicU, headpicD, nodepic;
+	loadimage(&headpicL, _T("G:\\图片\\Saved Pictures\\贪吃蛇游戏素材\\蛇头及蛇身素材\\向左的蛇头.png"));
+	loadimage(&headpicR, _T("G:\\图片\\Saved Pictures\\贪吃蛇游戏素材\\蛇头及蛇身素材\\向右的蛇头.png"));
+	loadimage(&headpicU, _T("G:\\图片\\Saved Pictures\\贪吃蛇游戏素材\\蛇头及蛇身素材\\向上的蛇头.png"));
+	loadimage(&headpicD, _T("G:\\图片\\Saved Pictures\\贪吃蛇游戏素材\\蛇头及蛇身素材\\向下的蛇头.png"));
+	loadimage(&nodepic, _T("G:\\图片\\Saved Pictures\\贪吃蛇游戏素材\\蛇头及蛇身素材\\蛇身.png"));
 	snakenode *point;
 	point = head;
 	moveto(point->x*SIZE, point->y*SIZE);
 	setfillcolor(YELLOW);
 	setlinecolor(WHITE);
-	fillcircle(point->x*SIZE+ SIZE / 2, point->y*SIZE+ SIZE / 2,SIZE/2);
+	setlinestyle(PS_NULL);
+	//fillcircle(point->x*SIZE+ SIZE / 2, point->y*SIZE+ SIZE / 2,SIZE/2);
+	switch (snakedir)
+	{
+	case 1:
+		putimage(point->x*SIZE, point->y*SIZE, &headpicU);
+		break;
+	case 2:
+		putimage(point->x*SIZE, point->y*SIZE, &headpicD);
+		break;
+	case 3:
+		putimage(point->x*SIZE, point->y*SIZE, &headpicL);
+		break;
+	case 4:
+		putimage(point->x*SIZE, point->y*SIZE, &headpicR);
+		break;
+	default:
+		break;
+	}
 	point = point->next;
 	while (point!=NULL)
 	{
 		moveto(point->x*SIZE, point->y*SIZE);
 		setfillcolor(LIGHTBLUE);
 		setlinecolor(WHITE);
-		fillcircle(point->x*SIZE + SIZE / 2, point->y*SIZE + SIZE / 2, SIZE / 2);
+		setlinestyle(PS_NULL);
+		//fillcircle(point->x*SIZE + SIZE / 2, point->y*SIZE + SIZE / 2, SIZE / 2);
+		putimage(point->x*SIZE, point->y*SIZE, &nodepic);
 		point = point->next;
 	} 
 }
@@ -258,7 +288,7 @@ void levelUI()
 void dataShow()
 {
 	IMAGE img1;
-	loadimage(&img1, _T("G:\\图片\\Saved Pictures\\贪吃蛇游戏素材\\没有计分板的右侧图片-2.png"));
+	loadimage(&img1, _T("G:\\图片\\Saved Pictures\\贪吃蛇游戏素材\\有计分板的右侧图片-2.png"));
 	putimage(640,0,&img1);
 	loadimage(&number[0], _T("G:\\图片\\Saved Pictures\\贪吃蛇游戏素材\\数字素材\\0.png"));
 	loadimage(&number[1], _T("G:\\图片\\Saved Pictures\\贪吃蛇游戏素材\\数字素材\\1.png"));
@@ -308,6 +338,9 @@ void endGameUI()
 //数据初始化函数
 void startup()
 {
+	IMAGE whitebackground;
+	loadimage(&whitebackground,_T("G:\\图片\\Saved Pictures\\贪吃蛇游戏素材\\游戏背景素材\\纯白背景.png"));
+	putimage(0, 0, &whitebackground);
 	//打印边框
 	for (i = 0; i < GAMEFRAME_WIDTH; i++)
 	{

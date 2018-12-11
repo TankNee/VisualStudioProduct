@@ -163,7 +163,6 @@
     <ClCompile Include="链表贪吃蛇test1.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <Image Include="G:\图片\Saved Pictures\微信图片_20180808214022.jpg" />
     <Image Include="G:\图片\Saved Pictures\贪吃蛇游戏素材\开始界面-1.png" />
     <Image Include="G:\图片\Saved Pictures\贪吃蛇游戏素材\开始界面素材\开始游戏-1.png" />
     <Image Include="G:\图片\Saved Pictures\贪吃蛇游戏素材\开始界面素材\继续游戏-1.png" />
@@ -178,13 +177,18 @@
     <Image Include="G:\图片\Saved Pictures\贪吃蛇游戏素材\数字素材\7.png" />
     <Image Include="G:\图片\Saved Pictures\贪吃蛇游戏素材\数字素材\8.png" />
     <Image Include="G:\图片\Saved Pictures\贪吃蛇游戏素材\数字素材\9.png" />
-    <Image Include="G:\图片\Saved Pictures\贪吃蛇游戏素材\没有计分板的右侧图片-2.png" />
-    <Image Include="G:\图片\Saved Pictures\贪吃蛇游戏素材\热狗背景图-1.jpg" />
+    <Image Include="G:\图片\Saved Pictures\贪吃蛇游戏素材\有计分板的右侧图片-2.png" />
+    <Image Include="G:\图片\Saved Pictures\贪吃蛇游戏素材\游戏背景素材\纯白背景.png" />
+    <Image Include="G:\图片\Saved Pictures\贪吃蛇游戏素材\游戏背景素材\蛇身遮盖素材.png" />
+    <Image Include="G:\图片\Saved Pictures\贪吃蛇游戏素材\蛇头及蛇身素材\向上的蛇头.png" />
+    <Image Include="G:\图片\Saved Pictures\贪吃蛇游戏素材\蛇头及蛇身素材\向下的蛇头.png" />
+    <Image Include="G:\图片\Saved Pictures\贪吃蛇游戏素材\蛇头及蛇身素材\向右的蛇头.png" />
+    <Image Include="G:\图片\Saved Pictures\贪吃蛇游戏素材\蛇头及蛇身素材\向左的蛇头.png" />
+    <Image Include="G:\图片\Saved Pictures\贪吃蛇游戏素材\蛇头及蛇身素材\蛇身.png" />
     <Image Include="G:\图片\Saved Pictures\贪吃蛇游戏素材\难度关卡素材\困难-1.png" />
     <Image Include="G:\图片\Saved Pictures\贪吃蛇游戏素材\难度关卡素材\普通-1.png" />
     <Image Include="G:\图片\Saved Pictures\贪吃蛇游戏素材\难度关卡素材\简单-1.png" />
     <Image Include="G:\图片\Saved Pictures\贪吃蛇游戏素材\难度选择-1.png" />
-    <Image Include="G:\图片\Saved Pictures\贪吃蛇游戏素材\鼠标素材-3.png" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
