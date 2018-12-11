@@ -151,7 +151,9 @@ void coverAndClear(snakenode *pt)
 	setfillcolor(WHITE);
 	setlinecolor(WHITE);
 	//fillcircle(temp->x*SIZE + SIZE / 2, temp->y*SIZE + SIZE / 2, SIZE / 2);
-	putimage(temp->x*SIZE, temp->y*SIZE, &img1);
+	fillrectangle(temp->x*SIZE, temp->y*SIZE, temp->x*SIZE + SIZE, temp->y*SIZE + SIZE);
+	//fillcircle(temp->x*SIZE + SIZE / 2, temp->y*SIZE + SIZE / 2, SIZE / 2);
+	//putimage(temp->x*SIZE, temp->y*SIZE, &img1);
 
 }
 void snakePaint()
@@ -164,11 +166,7 @@ void snakePaint()
 	loadimage(&nodepic, _T("G:\\图片\\Saved Pictures\\贪吃蛇游戏素材\\蛇头及蛇身素材\\蛇身.png"));
 	snakenode *point;
 	point = head;
-	moveto(point->x*SIZE, point->y*SIZE);
-	setfillcolor(YELLOW);
-	setlinecolor(WHITE);
 	setlinestyle(PS_NULL);
-	//fillcircle(point->x*SIZE+ SIZE / 2, point->y*SIZE+ SIZE / 2,SIZE/2);
 	switch (snakedir)
 	{
 	case 1:
@@ -189,11 +187,6 @@ void snakePaint()
 	point = point->next;
 	while (point!=NULL)
 	{
-		moveto(point->x*SIZE, point->y*SIZE);
-		setfillcolor(LIGHTBLUE);
-		setlinecolor(WHITE);
-		setlinestyle(PS_NULL);
-		//fillcircle(point->x*SIZE + SIZE / 2, point->y*SIZE + SIZE / 2, SIZE / 2);
 		putimage(point->x*SIZE, point->y*SIZE, &nodepic);
 		point = point->next;
 	} 
