@@ -89,6 +89,8 @@ void iniSnake()
 //毒药的生成
 void creatPoison()
 {
+	IMAGE img1;
+	loadimage(&img1, _T("G:\\图片\\Saved Pictures\\贪吃蛇游戏素材\\道具素材\\橘子-毒草.png"));
 	srand((unsigned)time(NULL));
 	poison1.x =rand() % 48 + 15;
 	poison1.y = rand()  % 37 + 10;
@@ -96,10 +98,11 @@ void creatPoison()
 	{
 		creatPoison();
 	}
-	moveto(poison1.x*SIZE, poison1.y*SIZE);
+	/*moveto(poison1.x*SIZE, poison1.y*SIZE);
 	setlinecolor(WHITE);
 	setfillcolor(GREEN);
-	fillcircle(poison1.x*SIZE + SIZE / 2, poison1.y*SIZE + SIZE / 2, SIZE / 2);
+	fillcircle(poison1.x*SIZE + SIZE / 2, poison1.x*SIZE + SIZE / 2, SIZE / 2);*/
+	putimage(poison1.x*SIZE, poison1.x*SIZE,&img1);
 }
 //食物的生成
 void creatFood()
@@ -281,7 +284,7 @@ void levelUI()
 void dataShow()
 {
 	IMAGE img1;
-	loadimage(&img1, _T("G:\\图片\\Saved Pictures\\贪吃蛇游戏素材\\有计分板的右侧图片-2.png"));
+	loadimage(&img1, _T("G:\\图片\\Saved Pictures\\贪吃蛇游戏素材\\游戏背景素材\\新的计分板.png"));
 	putimage(640,0,&img1);
 	loadimage(&number[0], _T("G:\\图片\\Saved Pictures\\贪吃蛇游戏素材\\数字素材\\0.png"));
 	loadimage(&number[1], _T("G:\\图片\\Saved Pictures\\贪吃蛇游戏素材\\数字素材\\1.png"));
@@ -326,7 +329,7 @@ void endGameUI()
 {
 	IMAGE img1;
 	MOUSEMSG m;
-	system("pause");
+	_getch();
 }
 //数据初始化函数
 void startup()
@@ -424,7 +427,7 @@ void snakeMove()
 		}
 		if (len == 0)
 		{
-			system("pause");
+			_getch();
 			exit(0);
 		}
 		for (i = 0; i <= len; i++)
@@ -438,7 +441,7 @@ void snakeMove()
 	}
 	else if (check == 4)
 	{
-		system("pause");
+		_getch();
 		Sleep(3000);
 		exit(0);
 	}
