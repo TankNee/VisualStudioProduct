@@ -72,6 +72,7 @@ void levelUI();
 void writeRank();
 void readRank();
 void sortRank(int a[10]);
+void biteItself();
 void iniSnake()
 {
 	snakenode *snakept_1,*snakept_2;
@@ -351,6 +352,7 @@ void endGameUI()
 {
 	IMAGE img1;
 	MOUSEMSG m;
+	exit(0);
 	_getch();
 }
 //数据初始化函数
@@ -666,6 +668,7 @@ void snakeMove()
 		coverAndClear(temp->next);
 		free(temp->next);
 		temp->next = NULL;
+		biteItself();
 	}
 }
 int checkMove(snakenode *checkpoint)//检查函数，判断蛇的移动是否合法
@@ -715,9 +718,18 @@ int checkMove(snakenode *checkpoint)//检查函数，判断蛇的移动是否合
 		checkpoint = checkpoint->next;
 	}
 }
-int biteItself()
+void biteItself()
 {
-	return 0;
+	snakenode *tempnode;
+	tempnode = head->next;
+	while (tempnode!=NULL)
+	{
+		if (tempnode->x == head->x&&tempnode->y == head->y)
+		{
+			endGameUI();
+		}
+		tempnode = tempnode->next;
+	}
 }
 //道具检查函数，检查是否生成在同一位置
 int checkProp()
