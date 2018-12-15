@@ -196,6 +196,9 @@
     <Image Include="G:\图片\Saved Pictures\贪吃蛇游戏素材\难度关卡素材\简单-1.png" />
     <Image Include="G:\图片\Saved Pictures\贪吃蛇游戏素材\难度选择-1.png" />
   </ItemGroup>
+  <ItemGroup>
+    <Text Include="G:\图片\Saved Pictures\贪吃蛇游戏素材\rank.txt" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

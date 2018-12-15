@@ -13,8 +13,10 @@
 #define DATAFRAME_WIDTH 48
 //数字1~9
 IMAGE number[10];
-//分数  基准分数为0   食物的基准分数为5  毒药基准分数为-10 
-int score=0, foodscore=5,poisonscore=-10;
+//文件指针函数
+FILE *fpRank;
+//排行榜数组
+int rankscore[10] = {0};
 //难度变量
 int level = 5;
 //上：1  下：2  左：3  右：4     
@@ -25,6 +27,8 @@ int i, j;
 int length=4;
 //速度控制变量
 int  sleeptime = 150-level*10;
+//分数  基准分数为0   食物的基准分数为5  毒药基准分数为-10 
+int score = 0, foodscore = 5 + level / 2 + length / 3, poisonscore = -10;
 //食物的结构体
 struct food
 {
@@ -61,10 +65,13 @@ struct smartFood
 void startup();
 int checkMove(snakenode *checkpoint);
 int checkProp();
-void datashow();
+void dataShow();
 void endGameUI();
 void startGame();
 void levelUI();
+void writeRank();
+void readRank();
+void sortRank(int a[10]);
 void iniSnake()
 {
 	snakenode *snakept_1,*snakept_2;
@@ -98,11 +105,11 @@ void creatPoison()
 	{
 		creatPoison();
 	}
-	/*moveto(poison1.x*SIZE, poison1.y*SIZE);
+	moveto(poison1.x*SIZE, poison1.y*SIZE);
 	setlinecolor(WHITE);
 	setfillcolor(GREEN);
-	fillcircle(poison1.x*SIZE + SIZE / 2, poison1.x*SIZE + SIZE / 2, SIZE / 2);*/
-	putimage(poison1.x*SIZE, poison1.x*SIZE,&img1);
+	fillcircle(poison1.x*SIZE + SIZE / 2, poison1.x*SIZE + SIZE / 2, SIZE / 2);
+	//putimage(poison1.x*SIZE, poison1.x*SIZE,&img1);
 }
 //食物的生成
 void creatFood()
@@ -297,6 +304,7 @@ void dataShow()
 	loadimage(&number[8], _T("G:\\图片\\Saved Pictures\\贪吃蛇游戏素材\\数字素材\\8.png"));
 	loadimage(&number[9], _T("G:\\图片\\Saved Pictures\\贪吃蛇游戏素材\\数字素材\\9.png"));
 	int bit_1, bit_2, bit_3;
+	//当前分数的显示
 	if (score >= 0)
 	{
 		bit_1 = score / 100;
@@ -310,7 +318,21 @@ void dataShow()
 	{
 		endGameUI();
 	}
-
+	readRank();
+	//最高分的显示
+	bit_1 = rankscore[0] / 100;
+	bit_2 = (rankscore[0] / 10) % 10;
+	bit_3 = rankscore[0] % 10;
+	putimage(790, 395, &number[bit_1]);
+	putimage(807, 395, &number[bit_2]);
+	putimage(824, 395, &number[bit_3]);
+	//食物分数的显示
+	bit_1 = foodscore / 100;
+	bit_2 = (foodscore / 10) % 10;
+	bit_3 = foodscore  % 10;
+	putimage(1062, 395, &number[bit_1]);
+	putimage(1079, 395, &number[bit_2]);
+	putimage(1096, 395, &number[bit_3]);
 }
 void startGameUI()
 {
@@ -365,6 +387,48 @@ void startup()
 	creatPoison();
 	creatSmartFood();
 	creatBoom();
+}
+//写入排行榜
+void writeRank()
+{
+	fopen_s(&fpRank, "G:\\图片\\Saved Pictures\\贪吃蛇游戏素材\\rank.txt","w");
+	rankscore[9] = score;
+	sortRank(rankscore);
+	for (i = 0; i < 10; i++)
+	{
+		fprintf_s(fpRank, "%d\n", rankscore[i]);
+	}
+	fclose(fpRank);
+	//需要再写一个排序函数
+}
+//读取排行榜
+void readRank()
+{
+	fopen_s(&fpRank, "G:\\图片\\Saved Pictures\\贪吃蛇游戏素材\\rank.txt", "r");
+	for (i = 0; i < 10; i++)
+	{
+		fscanf_s(fpRank, "%d", &rankscore[i]);
+	}
+	fclose(fpRank);
+}
+void sortRank(int a[10])
+{
+	int maxnumber,tempnumber;
+	maxnumber = a[0];
+	for (j = 0; j < 10; j++)
+	{
+		for (i = j; i < 10; i++)
+		{
+			if (a[i] > maxnumber)
+			{
+				tempnumber = a[i];
+				a[i] = maxnumber;
+				maxnumber = tempnumber;
+			}
+		}
+		a[j] = maxnumber;
+		maxnumber = -10000;
+	}
 }
 //蛇移动函数
 //移动方法：新建一个头节点，删除一个尾节点
@@ -626,6 +690,7 @@ int checkMove(snakenode *checkpoint)//检查函数，判断蛇的移动是否合
 	}
 	else if (checkpoint->x == 0 || checkpoint->x == 63 || checkpoint->y == 0 || checkpoint->y == 47)
 	{
+		writeRank();
 		return 4;
 	}
 	else if (checkpoint->x == smartfood1.x&&checkpoint->y ==smartfood1.y)
