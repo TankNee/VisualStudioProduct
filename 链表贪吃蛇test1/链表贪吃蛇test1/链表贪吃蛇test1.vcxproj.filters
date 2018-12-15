@@ -31,6 +31,9 @@
     <Filter Include="资源文件\蛇头及蛇身素材">
       <UniqueIdentifier>{b317d8ad-4ae4-441a-9f4e-a952b40f1efb}</UniqueIdentifier>
     </Filter>
+    <Filter Include="资源文件\数据中心素材">
+      <UniqueIdentifier>{4f0fd1e2-aa2d-48a1-8d2e-493189ba5583}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h">
@@ -141,6 +144,15 @@
     </Image>
     <Image Include="G:\图片\Saved Pictures\贪吃蛇游戏素材\道具素材\西柚-食物.png">
       <Filter>资源文件\道具素材</Filter>
+    </Image>
+    <Image Include="G:\图片\Saved Pictures\贪吃蛇游戏素材\开始界面素材\数据中心-1.png">
+      <Filter>资源文件\开始界面素材</Filter>
+    </Image>
+    <Image Include="G:\图片\Saved Pictures\贪吃蛇游戏素材\数据中心素材\数据中心-2.png">
+      <Filter>资源文件\数据中心素材</Filter>
+    </Image>
+    <Image Include="G:\图片\Saved Pictures\贪吃蛇游戏素材\数据中心素材\数据中心-1.png">
+      <Filter>资源文件\数据中心素材</Filter>
     </Image>
   </ItemGroup>
   <ItemGroup>

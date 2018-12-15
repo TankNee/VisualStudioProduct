@@ -11,6 +11,8 @@
 #define GAMEFRAME_WIDTH 64
 #define FRAME_HEIGHTH 48
 #define DATAFRAME_WIDTH 48
+//随机变量
+int randnumber=3543;
 //数字1~9
 IMAGE number[10];
 //文件指针函数
@@ -99,11 +101,12 @@ void creatPoison()
 {
 	IMAGE img1;
 	loadimage(&img1, _T("G:\\图片\\Saved Pictures\\贪吃蛇游戏素材\\道具素材\\橘子-毒草.png"));
-	srand((unsigned)time(NULL));
+	srand(randnumber);
 	poison1.x =rand() % 48 + 15;
 	poison1.y = rand()  % 37 + 10;
 	if (checkProp() == 1 || checkProp() == 2)
 	{
+		randnumber += 275;
 		creatPoison();
 	}
 	moveto(poison1.x*SIZE, poison1.y*SIZE);
@@ -111,36 +114,41 @@ void creatPoison()
 	setfillcolor(GREEN);
 	fillcircle(poison1.x*SIZE + SIZE / 2, poison1.x*SIZE + SIZE / 2, SIZE / 2);
 	//putimage(poison1.x*SIZE, poison1.x*SIZE,&img1);
+	randnumber += 24;
 }
 //食物的生成
 void creatFood()
 {
-	srand((unsigned)time(NULL));
+	srand(randnumber);
 	food1.x = rand() % 56 + 7;
 	food1.y = rand()  % 44 + 3;
 	if (checkProp()==1||checkProp()==3)
 	{
+		randnumber += 54;
 		creatFood();
 	}
 	moveto(food1.x*SIZE, food1.y*SIZE);
 	setlinecolor(WHITE);
 	setfillcolor(RED);
 	fillcircle(food1.x*SIZE + SIZE / 2, food1.y*SIZE + SIZE / 2, SIZE / 2);
+	randnumber += 23;
 }
 //炸弹的生成
 void creatBoom()
 {
-	srand((unsigned)time(NULL));
+	srand(randnumber);
 	boom1.x = rand()  % 54 + 7;
 	boom1.y = rand()  % 34 + 13;
 	if (checkProp() == 2 || checkProp() == 3)
 	{
+		randnumber += 25;
 		creatBoom();
 	}
 	moveto(boom1.x*SIZE, boom1.y*SIZE);
 	setlinecolor(WHITE);
 	setfillcolor(LIGHTGRAY);
 	fillcircle(boom1.x*SIZE + SIZE / 2, boom1.y*SIZE + SIZE / 2, SIZE / 2);
+	randnumber += 12;
 }
 void creatSmartFood()
 {
@@ -202,16 +210,18 @@ void snakePaint()
 		point = point->next;
 	} 
 }
+void dataCenterUI();
 //初始化界面
 void welcomeUI()
 {
-	IMAGE img1,img2,img3,img4,img5;
+	IMAGE img1,img2,img3,img4,img5,img6;
 	loadimage(&img1, _T("G:\\图片\\Saved Pictures\\贪吃蛇游戏素材\\开始界面-1.png"));
 	putimage(0, 0, &img1);
 	loadimage(&img2, _T("G:\\图片\\Saved Pictures\\贪吃蛇游戏素材\\难度选择-1.png"));
 	loadimage(&img3, _T("G:\\图片\\Saved Pictures\\贪吃蛇游戏素材\\开始界面素材\\开始游戏-1.png"));
 	loadimage(&img4, _T("G:\\图片\\Saved Pictures\\贪吃蛇游戏素材\\开始界面素材\\继续游戏-1.png"));
 	loadimage(&img5, _T("G:\\图片\\Saved Pictures\\贪吃蛇游戏素材\\开始界面素材\\退出游戏-1.png"));
+	loadimage(&img6, _T("G:\\图片\\Saved Pictures\\贪吃蛇游戏素材\\开始界面素材\\数据中心-1.png"));
 	MOUSEMSG m;
 	while (true)
 	{
@@ -238,6 +248,18 @@ void welcomeUI()
 				if (m.mkLButton)
 				{
 					exit(0);
+				}
+			}
+		}
+		if (m.x >= 920 && m.x <= 1120)
+		{
+			if (m.y <= 480 && m.y >= 413)//数据中心按钮
+			{
+				putimage(0, 0, &img6);
+				if (m.mkLButton)
+				{
+					dataCenterUI();
+					
 				}
 			}
 		}
@@ -335,6 +357,33 @@ void dataShow()
 	putimage(1079, 395, &number[bit_2]);
 	putimage(1096, 395, &number[bit_3]);
 }
+void dataCenterUI()
+{
+	IMAGE img1,img2;
+	loadimage(&img1, _T("G:\\图片\\Saved Pictures\\贪吃蛇游戏素材\\数据中心素材\\数据中心-1.png"));
+	loadimage(&img2, _T("G:\\图片\\Saved Pictures\\贪吃蛇游戏素材\\数据中心素材\\数据中心-2.png"));
+	putimage(0, 0, &img1);
+	MOUSEMSG m;
+	while (true)
+	{
+		m = GetMouseMsg();
+		if (m.x >= 461 && m.x <= 660)
+		{
+			if (m.y >= 413 && m.y <= 480)
+			{
+				putimage(0, 0, &img2);
+				if (m.mkLButton)
+				{
+					welcomeUI();
+				}
+			}
+			else
+			{
+				putimage(0, 0, &img1);
+			}
+		}
+	}
+}
 void startGameUI()
 {
 	IMAGE img1;
@@ -365,18 +414,22 @@ void startup()
 	for (i = 0; i < GAMEFRAME_WIDTH; i++)
 	{
 		moveto(i*SIZE, 0);
+		setlinecolor(WHITE);
 		setfillcolor(BLUE);
 		fillrectangle(i*SIZE, 0, (i + 1)*SIZE, SIZE);
 		moveto(i*SIZE, (FRAME_HEIGHTH-1)*SIZE);
+		setlinecolor(WHITE);
 		setfillcolor(BLUE);
 		fillrectangle(i*SIZE, (FRAME_HEIGHTH - 1)*SIZE, (i + 1)*SIZE, (FRAME_HEIGHTH )*SIZE);
 	}
 	for (j = 0; j < FRAME_HEIGHTH; j++)
 	{
 		moveto(0, j*SIZE);
+		setlinecolor(WHITE);
 		setfillcolor(BLUE);
 		fillrectangle(0,j*SIZE,SIZE,(j+1)*SIZE);
 		moveto((GAMEFRAME_WIDTH - 1)*SIZE, j*SIZE);
+		setlinecolor(WHITE);
 		setfillcolor(BLUE);
 		fillrectangle((GAMEFRAME_WIDTH - 1)*SIZE, j*SIZE, GAMEFRAME_WIDTH*SIZE, (j + 1)*SIZE);
 	}
@@ -385,10 +438,14 @@ void startup()
 	//打印蛇身
 	snakePaint();
 	//打印各类道具
-	creatFood();
-	creatPoison();
-	creatSmartFood();
-	creatBoom();
+	for (i = 0; i < level; i++)
+	{
+		creatFood();
+		creatPoison();
+		creatSmartFood();
+		creatBoom();
+		randnumber += 88;
+	}
 }
 //写入排行榜
 void writeRank()
@@ -401,7 +458,6 @@ void writeRank()
 		fprintf_s(fpRank, "%d\n", rankscore[i]);
 	}
 	fclose(fpRank);
-	//需要再写一个排序函数
 }
 //读取排行榜
 void readRank()
@@ -813,6 +869,14 @@ void startGame()
 		dataShow();
 	}
 }
+void freerom()
+{
+	while (head!=NULL)
+	{
+		free(head);
+		head = head->next;
+	}
+}
 //主函数
 int main()
 {
@@ -820,6 +884,7 @@ int main()
 	welcomeUI();
 	startup();
 	startGame();
+	freerom();
 	getchar(); 
 	closegraph();
 }	
