@@ -39,6 +39,9 @@
     <ClInclude Include="pch.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="resource.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp">
@@ -157,6 +160,9 @@
   </ItemGroup>
   <ItemGroup>
     <Text Include="G:\图片\Saved Pictures\贪吃蛇游戏素材\rank.txt">
+      <Filter>资源文件</Filter>
+    </Text>
+    <Text Include="C:\Users\Lenovo\Desktop\文档\rand.txt">
       <Filter>资源文件</Filter>
     </Text>
   </ItemGroup>

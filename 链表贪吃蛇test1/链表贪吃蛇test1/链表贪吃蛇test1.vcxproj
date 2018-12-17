@@ -152,6 +152,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="pch.h" />
+    <ClInclude Include="resource.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp">
@@ -200,6 +201,7 @@
     <Image Include="G:\图片\Saved Pictures\贪吃蛇游戏素材\难度选择-1.png" />
   </ItemGroup>
   <ItemGroup>
+    <Text Include="C:\Users\Lenovo\Desktop\文档\rand.txt" />
     <Text Include="G:\图片\Saved Pictures\贪吃蛇游戏素材\rank.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
