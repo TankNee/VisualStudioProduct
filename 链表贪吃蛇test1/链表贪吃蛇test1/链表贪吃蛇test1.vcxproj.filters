@@ -34,6 +34,9 @@
     <Filter Include="资源文件\数据中心素材">
       <UniqueIdentifier>{4f0fd1e2-aa2d-48a1-8d2e-493189ba5583}</UniqueIdentifier>
     </Filter>
+    <Filter Include="资源文件\结束界面素材">
+      <UniqueIdentifier>{20b7bfdb-7821-44a9-bfc3-f675e5c00fec}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h">
@@ -156,6 +159,9 @@
     </Image>
     <Image Include="G:\图片\Saved Pictures\贪吃蛇游戏素材\数据中心素材\数据中心-1.png">
       <Filter>资源文件\数据中心素材</Filter>
+    </Image>
+    <Image Include="G:\图片\Saved Pictures\贪吃蛇游戏素材\结束界面素材\结束界面.png">
+      <Filter>资源文件\结束界面素材</Filter>
     </Image>
   </ItemGroup>
   <ItemGroup>

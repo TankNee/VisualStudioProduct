@@ -31,7 +31,7 @@ int i, j;
 //蛇身的长度
 int length=4;
 //速度控制变量
-int  sleeptime = 150-level*10;
+int  sleeptime = 100-level*10;
 //分数  基准分数为0   食物的基准分数为5  毒药基准分数为-10 
 int score = 0,foodscore, poisonscore = -10;
 //食物的结构体
@@ -80,6 +80,7 @@ void sortRank(int a[10]);
 void biteItself();
 void writeRand();
 void readRand();
+int main();
 void iniSnake()
 {
 	snakenode *snakept_1,*snakept_2;
@@ -385,6 +386,30 @@ void dataShow()
 	putimage(1079, 436, &number[bit_2]);
 	putimage(1096, 436, &number[bit_3]);
 }
+void dataCenterShow()
+{
+	loadimage(&number[0], _T("G:\\图片\\Saved Pictures\\贪吃蛇游戏素材\\数字素材\\0.png"));
+	loadimage(&number[1], _T("G:\\图片\\Saved Pictures\\贪吃蛇游戏素材\\数字素材\\1.png"));
+	loadimage(&number[2], _T("G:\\图片\\Saved Pictures\\贪吃蛇游戏素材\\数字素材\\2.png"));
+	loadimage(&number[3], _T("G:\\图片\\Saved Pictures\\贪吃蛇游戏素材\\数字素材\\3.png"));
+	loadimage(&number[4], _T("G:\\图片\\Saved Pictures\\贪吃蛇游戏素材\\数字素材\\4.png"));
+	loadimage(&number[5], _T("G:\\图片\\Saved Pictures\\贪吃蛇游戏素材\\数字素材\\5.png"));
+	loadimage(&number[6], _T("G:\\图片\\Saved Pictures\\贪吃蛇游戏素材\\数字素材\\6.png"));
+	loadimage(&number[7], _T("G:\\图片\\Saved Pictures\\贪吃蛇游戏素材\\数字素材\\7.png"));
+	loadimage(&number[8], _T("G:\\图片\\Saved Pictures\\贪吃蛇游戏素材\\数字素材\\8.png"));
+	loadimage(&number[9], _T("G:\\图片\\Saved Pictures\\贪吃蛇游戏素材\\数字素材\\9.png"));
+	readRank();
+	int bit_1, bit_2, bit_3;
+	for (i = 0; i < 3; i++)
+	{
+		bit_1 = rankscore[i] / 100;
+		bit_2 = (rankscore[i] / 10) % 10;
+		bit_3 = rankscore[i] % 10;
+		putimage(505, 100 + i * 120, &number[bit_1]);
+		putimage(525, 100 + i * 120, &number[bit_2]);
+		putimage(545, 100 + i * 120, &number[bit_3]);
+	}
+}
 void dataCenterUI()
 {
 	IMAGE img1,img2;
@@ -392,6 +417,7 @@ void dataCenterUI()
 	loadimage(&img2, _T("G:\\图片\\Saved Pictures\\贪吃蛇游戏素材\\数据中心素材\\数据中心-2.png"));
 	putimage(0, 0, &img1);
 	MOUSEMSG m;
+	dataCenterShow();
 	while (true)
 	{
 		m = GetMouseMsg();
@@ -399,7 +425,7 @@ void dataCenterUI()
 		{
 			if (m.y >= 413 && m.y <= 480)
 			{
-				putimage(0, 0, &img2);
+				//putimage(0, 0, &img2);
 				if (m.mkLButton)
 				{
 					break;
@@ -407,8 +433,12 @@ void dataCenterUI()
 			}
 			else
 			{
-				putimage(0, 0, &img1);
+				dataCenterShow();
 			}
+		}
+		else
+		{
+			dataCenterShow();
 		}
 	}
 }
@@ -416,10 +446,29 @@ void endGameUI()
 {
 	IMAGE img1;
 	MOUSEMSG m;
+	loadimage(&img1, _T("G:\\图片\\Saved Pictures\\贪吃蛇游戏素材\\结束界面素材\\结束界面.png"));
+	putimage(0, 0, &img1);
+	while (true)
+	{
+		m = GetMouseMsg();
+		if (m.x >= 629 && m.x <= 971 && m.y >= 306 && m.y <= 373)
+		{
+			if (m.mkLButton)
+			{
+				exit(0);
+			}
+		}
+		else if (m.x >= 149 && m.x <= 488 && m.y >= 306 && m.y <= 373)
+		{
+			if (m.mkLButton)
+			{
+				main();
+			}
+		}
+	}
 	writeRank();
 	writeRand();
 	exit(0);
-	_getch();
 }
 //数据初始化函数
 void startup()
@@ -507,6 +556,8 @@ void secondStartup()
 		setfillcolor(BLUE);
 		fillrectangle(i*SIZE, 40*SIZE, (i + 1)*SIZE, 41*SIZE);
 	}
+	snakedir = 4;
+	length = 4;
 	//初始化蛇身
 	iniSnake();
 	//打印蛇身
@@ -652,9 +703,7 @@ void snakeMove()
 	}
 	else if (check == 4)
 	{
-		_getch();
-		Sleep(3000);
-		exit(0);
+		endGameUI();
 	}
 	else if (check == 5)
 	{
@@ -836,7 +885,7 @@ int checkMove(snakenode *checkpoint)//检查函数，判断蛇的移动是否合
 		sleeptime += 10;
 		return 3;
 	}
-	else if (checkpoint->x == 0 || checkpoint->x == 63 || checkpoint->y == 0 || checkpoint->y == 47)
+	else if (checkpoint->x == 0 || checkpoint->x == 63 || checkpoint->y == 0 || checkpoint->y == 47/*||checkObstacle(checkpoint)==1*/)
 	{
 		writeRank();
 		writeRand();
@@ -845,6 +894,18 @@ int checkMove(snakenode *checkpoint)//检查函数，判断蛇的移动是否合
 	else if (checkpoint->x == smartfood1.x&&checkpoint->y ==smartfood1.y)
 	{
 		return 5;
+	}
+	else if (pass==2)
+	{
+		if (checkpoint->x >= 5 &&checkpoint->x <= 59 )
+		{
+			if (checkpoint->y == 8  || checkpoint->y == 40 )
+			{
+				writeRank();
+				writeRand();
+				return 4;
+			}
+		}
 	}
 	else
 	{
@@ -859,14 +920,11 @@ int checkMove(snakenode *checkpoint)//检查函数，判断蛇的移动是否合
 		}
 		else if (checkpoint->next == NULL)
 		{
+			return 0;
 			break;
 		}
 		checkpoint = checkpoint->next;
 	}
-}
-void checkObstacle()
-{
-
 }
 void biteItself()
 {
@@ -985,7 +1043,7 @@ void freerom()
 int main()
 {
 	initgraph(1120, 480);	
-	welcomeUI();
+	label1: welcomeUI();
 	startup();
 	startGame();
 	freerom();
