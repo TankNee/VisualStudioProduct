@@ -270,7 +270,26 @@ void welcomeUI()
 				{
 					fopen_s(&fpSave, "G:\\图片\\Saved Pictures\\贪吃蛇游戏素材\\存档文件\\tempdata.txt", "r");
 					fscanf_s(fpSave, "%d", &pass);
+					fscanf_s(fpSave, "%d", &score);
+					fscanf_s(fpSave, "%d", &sleeptime);
+					fscanf_s(fpSave, "%d", &level);
+					fscanf_s(fpSave, "%d", &length);
+					readRand();
 					fclose(fpSave);
+					switch (pass)
+					{
+					case 1:
+						startup();
+						break;
+					case 2:
+						secondStartup();
+							break;
+					case 3:
+						thirdStartup();
+						break;
+					default:
+						break;
+					}
 					startGame();
 				}
 			}
@@ -504,6 +523,12 @@ void saveGameUI()
 			if (m.mkLButton)
 			{
 				fprintf_s(fpSave, "%d\n", pass);
+				fprintf_s(fpSave, "%d\n", score);
+				fprintf_s(fpSave, "%d\n", sleeptime);
+				fprintf_s(fpSave, "%d\n", level);
+				fprintf_s(fpSave, "%d\n", length);
+				writeRank();
+				writeRand();
 				exit(0);
 			}
 		}
