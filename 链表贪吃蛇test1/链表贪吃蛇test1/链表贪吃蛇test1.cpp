@@ -20,6 +20,7 @@ IMAGE number[10];
 //文件指针函数
 FILE *fpRank;
 FILE *fpRand;
+FILE *fpSave;
 //排行榜数组
 int rankscore[10] = {0};
 //难度变量
@@ -81,6 +82,9 @@ void biteItself();
 void writeRand();
 void readRand();
 int main();
+void secondStartup();
+void thirdStartup();
+void saveGameUI();
 void iniSnake()
 {
 	snakenode *snakept_1,*snakept_2;
@@ -232,7 +236,7 @@ void snakePaint()
 	} 
 }
 void dataCenterUI();
-//初始化界面
+//初始化界面--以及各种UI界面
 void welcomeUI()
 {
 	IMAGE img1,img2,img3,img4,img5,img6;
@@ -262,6 +266,13 @@ void welcomeUI()
 			if (m.y >= 269 && m.y <= 337)//第2个按钮
 			{
 				putimage(0, 0, &img4);
+				if (m.mkLButton)
+				{
+					fopen_s(&fpSave, "G:\\图片\\Saved Pictures\\贪吃蛇游戏素材\\存档文件\\tempdata.txt", "r");
+					fscanf_s(fpSave, "%d", &pass);
+					fclose(fpSave);
+					startGame();
+				}
 			}
 			if (m.y >= 367 && m.y <= 434)//第3个按钮
 			{
@@ -378,7 +389,7 @@ void dataShow()
 	putimage(1079, 395, &number[bit_2]);
 	putimage(1096, 395, &number[bit_3]);
 	//通关分数的显示
-	passscore = pass * 50;
+	passscore = pass * 10;
 	bit_1 = passscore / 100;
 	bit_2 = (passscore / 10) % 10;
 	bit_3 = passscore % 10;
@@ -462,6 +473,7 @@ void endGameUI()
 		{
 			if (m.mkLButton)
 			{
+				length = 4;
 				main();
 			}
 		}
@@ -469,6 +481,34 @@ void endGameUI()
 	writeRank();
 	writeRand();
 	exit(0);
+}
+void saveGameUI()
+{
+	IMAGE img1;
+	loadimage(&img1, _T("G:\\图片\\Saved Pictures\\贪吃蛇游戏素材\\存档文件\\存档界面.png"));
+	putimage(0, 0, &img1);
+	fopen_s(&fpSave, "G:\\图片\\Saved Pictures\\贪吃蛇游戏素材\\存档文件\\tempdata.txt", "w");
+	MOUSEMSG m;
+	while (true)
+	{
+		m = GetMouseMsg();
+		if (m.x >= 629 && m.x <= 971 && m.y >= 306 && m.y <= 373)
+		{
+			if (m.mkLButton)
+			{
+				exit(0);
+			}
+		}
+		else if (m.x >= 149 && m.x <= 488 && m.y >= 306 && m.y <= 373)
+		{
+			if (m.mkLButton)
+			{
+				fprintf_s(fpSave, "%d\n", pass);
+				exit(0);
+			}
+		}
+	}
+	fclose(fpSave);
 }
 //数据初始化函数
 void startup()
@@ -518,7 +558,7 @@ void startup()
 //第二关的初始化
 void secondStartup()
 {
-	sleeptime = 120 - level * 5;
+	sleeptime = 85 - level * 5;
 	IMAGE whitebackground;
 	loadimage(&whitebackground, _T("G:\\图片\\Saved Pictures\\贪吃蛇游戏素材\\游戏背景素材\\纯白背景.png"));
 	putimage(0, 0, &whitebackground);
@@ -555,6 +595,64 @@ void secondStartup()
 		setlinecolor(WHITE);
 		setfillcolor(BLUE);
 		fillrectangle(i*SIZE, 40*SIZE, (i + 1)*SIZE, 41*SIZE);
+	}
+	snakedir = 4;
+	length = 4;
+	//初始化蛇身
+	iniSnake();
+	//打印蛇身
+	snakePaint();
+	//打印各类道具
+	readRand();
+	for (i = 0; i < level; i++)
+	{
+		creatFood();
+		creatPoison();
+		creatSmartFood();
+		creatBoom();
+		randnumber += 88;
+	}
+}
+//第三关初始化
+void thirdStartup()
+{
+	sleeptime = 70 - level * 5;
+	IMAGE whitebackground;
+	loadimage(&whitebackground, _T("G:\\图片\\Saved Pictures\\贪吃蛇游戏素材\\游戏背景素材\\纯白背景.png"));
+	putimage(0, 0, &whitebackground);
+	//打印边框
+	for (i = 0; i < GAMEFRAME_WIDTH; i++)
+	{
+		moveto(i*SIZE, 0);
+		setlinecolor(WHITE);
+		setfillcolor(BLUE);
+		fillrectangle(i*SIZE, 0, (i + 1)*SIZE, SIZE);
+		moveto(i*SIZE, (FRAME_HEIGHTH - 1)*SIZE);
+		setlinecolor(WHITE);
+		setfillcolor(BLUE);
+		fillrectangle(i*SIZE, (FRAME_HEIGHTH - 1)*SIZE, (i + 1)*SIZE, (FRAME_HEIGHTH)*SIZE);
+	}
+	for (j = 0; j < FRAME_HEIGHTH; j++)
+	{
+		moveto(0, j*SIZE);
+		setlinecolor(WHITE);
+		setfillcolor(BLUE);
+		fillrectangle(0, j*SIZE, SIZE, (j + 1)*SIZE);
+		moveto((GAMEFRAME_WIDTH - 1)*SIZE, j*SIZE);
+		setlinecolor(WHITE);
+		setfillcolor(BLUE);
+		fillrectangle((GAMEFRAME_WIDTH - 1)*SIZE, j*SIZE, GAMEFRAME_WIDTH*SIZE, (j + 1)*SIZE);
+	}
+	for (i = 5; i < FRAME_HEIGHTH - 5; i++)
+	{
+		moveto(8*SIZE, i * SIZE);
+		setlinecolor(WHITE);
+		setfillcolor(BLUE);
+		fillrectangle(8*SIZE, i * SIZE, 9*SIZE, i * SIZE + SIZE);
+		moveto(56*SIZE, i * SIZE);
+		setlinecolor(WHITE);
+		setfillcolor(BLUE);
+		fillrectangle(56*SIZE, i * SIZE, 57*SIZE, (i+1) * SIZE);
 	}
 	snakedir = 4;
 	length = 4;
@@ -934,7 +1032,6 @@ void biteItself()
 	{
 		if (tempnode->x == head->x&&tempnode->y == head->y)
 		{
-
 			endGameUI();
 		}
 		tempnode = tempnode->next;
@@ -984,6 +1081,10 @@ void getInput()
 		{
 			snakedir = 4;
 		}
+		else if(input==27)
+		{
+			saveGameUI();
+		}
 		else if (input == 224)
 		{
 			key = _getch();
@@ -1022,10 +1123,17 @@ void startGame()
 		dataShow();
 		if (score >= passscore)
 		{
-			pass++;
-			secondStartup();
+			pass=pass+1;
+			if (pass == 2)
+			{
+				secondStartup();
+			}
+			else if (pass == 3)
+			{
+				thirdStartup();
+			}
 		}
-		if (score >= passscore && pass == 3)
+		if (score >= passscore && pass > 3)
 		{
 			endGameUI();
 		}

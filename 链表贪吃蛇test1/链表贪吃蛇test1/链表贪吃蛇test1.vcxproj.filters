@@ -37,6 +37,9 @@
     <Filter Include="资源文件\结束界面素材">
       <UniqueIdentifier>{20b7bfdb-7821-44a9-bfc3-f675e5c00fec}</UniqueIdentifier>
     </Filter>
+    <Filter Include="资源文件\存档文件">
+      <UniqueIdentifier>{99a531fe-dc77-41e5-9bbc-63d60d678fe0}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h">
@@ -163,6 +166,9 @@
     <Image Include="G:\图片\Saved Pictures\贪吃蛇游戏素材\结束界面素材\结束界面.png">
       <Filter>资源文件\结束界面素材</Filter>
     </Image>
+    <Image Include="G:\图片\Saved Pictures\贪吃蛇游戏素材\存档文件\存档界面.png">
+      <Filter>资源文件\存档文件</Filter>
+    </Image>
   </ItemGroup>
   <ItemGroup>
     <Text Include="G:\图片\Saved Pictures\贪吃蛇游戏素材\rank.txt">
@@ -170,6 +176,9 @@
     </Text>
     <Text Include="C:\Users\Lenovo\Desktop\文档\rand.txt">
       <Filter>资源文件</Filter>
+    </Text>
+    <Text Include="G:\图片\Saved Pictures\贪吃蛇游戏素材\存档文件\tempdata.txt">
+      <Filter>资源文件\存档文件</Filter>
     </Text>
   </ItemGroup>
 </Project>
