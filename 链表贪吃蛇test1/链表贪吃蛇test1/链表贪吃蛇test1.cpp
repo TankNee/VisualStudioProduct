@@ -6,6 +6,7 @@
 #include<graphics.h>
 #include<time.h>
 #include <iostream>
+//TODO 道具链表化
 //宏定义
 #define SIZE 10
 #define GAMEFRAME_WIDTH 64
@@ -36,17 +37,22 @@ int  sleeptime = 100-level*10;
 //分数  基准分数为0   食物的基准分数为5  毒药基准分数为-10 
 int score = 0,foodscore, poisonscore = -10;
 //食物的结构体
-struct food
+typedef struct food
 {
 	int x;
 	int y;
-} food1, food2, food3, food4;
+	food *next;
+	food *previous;
+} food;
+food food1; 
 //毒药的结构体
-struct poison
+typedef struct poison
 {
 	int x;
 	int y;
-}poison1, poison2, poison3,poison4;
+	poison *next;
+}poison;
+poison poison1; poison *Poison,*temppoison;
 //蛇的结构体
 typedef struct snakeNode
 {
@@ -57,16 +63,21 @@ typedef struct snakeNode
 } snakenode;
 snakenode *head;
 //炸弹的结构体
-struct boom
+typedef struct boom
 {
 	int x;
 	int y;
-}boom1;
-struct smartFood
+	boom *next;
+}boom;
+boom boom1; boom *Boom;
+typedef struct smartFood
 {
 	int x;
 	int y;
-}smartfood1;
+	smartFood *next;
+	smartFood *previous;
+}smartfood;
+smartFood smartfood1;
 //函数声明
 void startup();
 int checkMove(snakenode *checkpoint);
@@ -85,6 +96,8 @@ int main();
 void secondStartup();
 void thirdStartup();
 void saveGameUI();
+void creatPoison(poison *modelpt);
+//蛇的初始化
 void iniSnake()
 {
 	snakenode *snakept_1,*snakept_2;
@@ -106,36 +119,58 @@ void iniSnake()
 	}
 
 }
-//毒药的生成
-void creatPoison()
+//道具初始化
+void iniProp()
 {
-	IMAGE img1;
-	loadimage(&img1, _T("G:\\图片\\Saved Pictures\\贪吃蛇游戏素材\\道具素材\\橘子-毒草.png"));
+	poison *poisonpt_1, *poisonpt_2;
+	boom *boompt_1, *boompt_2;
+	Poison = (poison*)malloc(sizeof(poison));
+	Boom = (boom *)malloc(sizeof(boom));
+	/*Poison->previous = NULL;
+	Boom->previous = NULL;*/
+	poisonpt_2 = Poison;
+	boompt_2 = Boom;
+	creatPoison(Poison);
+	for (i = 0; i < level / 2; i++)
+	{
+		poisonpt_1= (poison*)malloc(sizeof(poison));
+		boompt_1 = (boom *)malloc(sizeof(boom));
+		poisonpt_2->next = poisonpt_1;
+		creatPoison(poisonpt_1);
+		boompt_2->next = boompt_1;
+		poisonpt_2 = poisonpt_1;
+		boompt_2 = boompt_1;
+	}
+	poisonpt_2->next = NULL;
+	boompt_2->next = NULL;
+}
+//毒药的生成
+void creatPoison(poison *modelpt)
+{
 	srand(randnumber);
+	modelpt->x= rand() % 48 + 15;
+	modelpt->y= rand() % 37 + 10;
 	poison1.x =rand() % 48 + 15;
 	poison1.y = rand()  % 37 + 10;
 	if (checkProp() == 1 || checkProp() == 2|| (poison1.x == GAMEFRAME_WIDTH / 2*SIZE&&poison1.y == FRAME_HEIGHTH / 2*SIZE))
 	{
 		randnumber += 275;
-		creatPoison();
+		creatPoison(modelpt);
 	}
-	moveto(poison1.x*SIZE, poison1.y*SIZE);
 	setlinecolor(WHITE);
 	setfillcolor(GREEN);
 	fillcircle(poison1.x*SIZE + SIZE / 2, poison1.x*SIZE + SIZE / 2, SIZE / 2);
-	//putimage(poison1.x*SIZE, poison1.x*SIZE,&img1);
+	fillcircle(modelpt->x*SIZE + SIZE / 2, modelpt->y*SIZE + SIZE / 2, SIZE / 2);
 	randnumber += 24;
 }
 //毒草闪烁函数
 void twinkle()
 {
-	//moveto(poison1.x*SIZE, poison1.y*SIZE);
 	//setfillcolor(RGB(12,65,77));
 	//setlinestyle(PS_NULL);
 	//fillcircle(poison1.x*SIZE + SIZE / 2, poison1.y*SIZE + SIZE / 2, SIZE / 2);
 	clearcircle(poison1.x*SIZE + SIZE / 2, poison1.y*SIZE + SIZE / 2, SIZE / 2);
 	Sleep(20);
-	moveto(poison1.x*SIZE, poison1.y*SIZE);
 	setlinecolor(WHITE);
 	setfillcolor(GREEN);
 	fillcircle(poison1.x*SIZE + SIZE / 2, poison1.x*SIZE + SIZE / 2, SIZE / 2);
@@ -151,7 +186,6 @@ void creatFood()
 		randnumber += 54;
 		creatFood();
 	}
-	moveto(food1.x*SIZE, food1.y*SIZE);
 	setlinecolor(WHITE);
 	setfillcolor(RED);
 	fillcircle(food1.x*SIZE + SIZE / 2, food1.y*SIZE + SIZE / 2, SIZE / 2);
@@ -169,7 +203,6 @@ void creatBoom()
 		randnumber += 25;
 		creatBoom();
 	}
-	moveto(boom1.x*SIZE, boom1.y*SIZE);
 	setlinecolor(WHITE);
 	setfillcolor(LIGHTGRAY);
 	fillcircle(boom1.x*SIZE + SIZE / 2, boom1.y*SIZE + SIZE / 2, SIZE / 2);
@@ -180,7 +213,6 @@ void creatSmartFood()
 	srand((unsigned)time(NULL));
 	smartfood1.x = rand()  % 54 + 7;
 	smartfood1.y = rand()  % 46 + 1;
-	moveto(smartfood1.x*SIZE, smartfood1.y*SIZE);
 	setlinecolor(WHITE);
 	setfillcolor(LIGHTCYAN);
 	fillcircle(smartfood1.x*SIZE + SIZE / 2, smartfood1.y*SIZE + SIZE / 2, SIZE / 2);
@@ -191,7 +223,6 @@ void coverAndClear(snakenode *pt)
 	loadimage(&img1, _T("G:\\图片\\Saved Pictures\\贪吃蛇游戏素材\\游戏背景素材\\蛇身遮盖素材.png"));
 	snakenode *temp;
 	temp = pt;
-	moveto(temp->x*SIZE, temp->y*SIZE);
 	setfillcolor(WHITE);
 	setlinecolor(WHITE);
 	//fillcircle(temp->x*SIZE + SIZE / 2, temp->y*SIZE + SIZE / 2, SIZE / 2);
@@ -334,7 +365,7 @@ void levelUI()
 				putimage(0, 0, &img1);
 				if (m.mkLButton)
 				{
-					level = 3;
+					level = 4;
 					startup();
 					break;
 				}
@@ -408,7 +439,7 @@ void dataShow()
 	putimage(1079, 395, &number[bit_2]);
 	putimage(1096, 395, &number[bit_3]);
 	//通关分数的显示
-	passscore = pass * 10;
+	passscore = pass * 100;
 	bit_1 = passscore / 100;
 	bit_2 = (passscore / 10) % 10;
 	bit_3 = passscore % 10;
@@ -545,22 +576,18 @@ void startup()
 	//打印边框
 	for (i = 0; i < GAMEFRAME_WIDTH; i++)
 	{
-		moveto(i*SIZE, 0);
 		setlinecolor(WHITE);
 		setfillcolor(BLUE);
 		fillrectangle(i*SIZE, 0, (i + 1)*SIZE, SIZE);
-		moveto(i*SIZE, (FRAME_HEIGHTH-1)*SIZE);
 		setlinecolor(WHITE);
 		setfillcolor(BLUE);
 		fillrectangle(i*SIZE, (FRAME_HEIGHTH - 1)*SIZE, (i + 1)*SIZE, (FRAME_HEIGHTH )*SIZE);
 	}
 	for (j = 0; j < FRAME_HEIGHTH; j++)
 	{
-		moveto(0, j*SIZE);
 		setlinecolor(WHITE);
 		setfillcolor(BLUE);
 		fillrectangle(0,j*SIZE,SIZE,(j+1)*SIZE);
-		moveto((GAMEFRAME_WIDTH - 1)*SIZE, j*SIZE);
 		setlinecolor(WHITE);
 		setfillcolor(BLUE);
 		fillrectangle((GAMEFRAME_WIDTH - 1)*SIZE, j*SIZE, GAMEFRAME_WIDTH*SIZE, (j + 1)*SIZE);
@@ -571,14 +598,11 @@ void startup()
 	snakePaint();
 	//打印各类道具
 	readRand();
-	for (i = 0; i < level; i++)
-	{
-		creatFood();
-		creatPoison();
-		creatSmartFood();
-		creatBoom();
-		randnumber += 88;
-	}
+	creatFood();
+	creatSmartFood();
+	iniProp();
+	creatBoom();
+	randnumber += 88;
 }
 //第二关的初始化
 void secondStartup()
@@ -590,33 +614,27 @@ void secondStartup()
 	//打印边框
 	for (i = 0; i < GAMEFRAME_WIDTH; i++)
 	{
-		moveto(i*SIZE, 0);
 		setlinecolor(WHITE);
 		setfillcolor(BLUE);
 		fillrectangle(i*SIZE, 0, (i + 1)*SIZE, SIZE);
-		moveto(i*SIZE, (FRAME_HEIGHTH - 1)*SIZE);
 		setlinecolor(WHITE);
 		setfillcolor(BLUE);
 		fillrectangle(i*SIZE, (FRAME_HEIGHTH - 1)*SIZE, (i + 1)*SIZE, (FRAME_HEIGHTH)*SIZE);
 	}
 	for (j = 0; j < FRAME_HEIGHTH; j++)
 	{
-		moveto(0, j*SIZE);
 		setlinecolor(WHITE);
 		setfillcolor(BLUE);
 		fillrectangle(0, j*SIZE, SIZE, (j + 1)*SIZE);
-		moveto((GAMEFRAME_WIDTH - 1)*SIZE, j*SIZE);
 		setlinecolor(WHITE);
 		setfillcolor(BLUE);
 		fillrectangle((GAMEFRAME_WIDTH - 1)*SIZE, j*SIZE, GAMEFRAME_WIDTH*SIZE, (j + 1)*SIZE);
 	}
 	for (i = 5; i < GAMEFRAME_WIDTH-5; i++)
 	{
-		moveto(i*SIZE, 8*SIZE);
 		setlinecolor(WHITE);
 		setfillcolor(BLUE);
 		fillrectangle(i*SIZE, 8 * SIZE, (i + 1)*SIZE, 8 * SIZE +SIZE);
-		moveto(i*SIZE, 40*SIZE);
 		setlinecolor(WHITE);
 		setfillcolor(BLUE);
 		fillrectangle(i*SIZE, 40*SIZE, (i + 1)*SIZE, 41*SIZE);
@@ -629,14 +647,12 @@ void secondStartup()
 	snakePaint();
 	//打印各类道具
 	readRand();
-	for (i = 0; i < level; i++)
-	{
-		creatFood();
-		creatPoison();
-		creatSmartFood();
-		creatBoom();
-		randnumber += 88;
-	}
+	creatFood();
+	creatSmartFood();
+	iniProp();
+	creatBoom();
+	randnumber += 88;
+	
 }
 //第三关初始化
 void thirdStartup()
@@ -648,33 +664,27 @@ void thirdStartup()
 	//打印边框
 	for (i = 0; i < GAMEFRAME_WIDTH; i++)
 	{
-		moveto(i*SIZE, 0);
 		setlinecolor(WHITE);
 		setfillcolor(BLUE);
 		fillrectangle(i*SIZE, 0, (i + 1)*SIZE, SIZE);
-		moveto(i*SIZE, (FRAME_HEIGHTH - 1)*SIZE);
 		setlinecolor(WHITE);
 		setfillcolor(BLUE);
 		fillrectangle(i*SIZE, (FRAME_HEIGHTH - 1)*SIZE, (i + 1)*SIZE, (FRAME_HEIGHTH)*SIZE);
 	}
 	for (j = 0; j < FRAME_HEIGHTH; j++)
 	{
-		moveto(0, j*SIZE);
 		setlinecolor(WHITE);
 		setfillcolor(BLUE);
 		fillrectangle(0, j*SIZE, SIZE, (j + 1)*SIZE);
-		moveto((GAMEFRAME_WIDTH - 1)*SIZE, j*SIZE);
 		setlinecolor(WHITE);
 		setfillcolor(BLUE);
 		fillrectangle((GAMEFRAME_WIDTH - 1)*SIZE, j*SIZE, GAMEFRAME_WIDTH*SIZE, (j + 1)*SIZE);
 	}
 	for (i = 5; i < FRAME_HEIGHTH - 5; i++)
 	{
-		moveto(8*SIZE, i * SIZE);
 		setlinecolor(WHITE);
 		setfillcolor(BLUE);
 		fillrectangle(8*SIZE, i * SIZE, 9*SIZE, i * SIZE + SIZE);
-		moveto(56*SIZE, i * SIZE);
 		setlinecolor(WHITE);
 		setfillcolor(BLUE);
 		fillrectangle(56*SIZE, i * SIZE, 57*SIZE, (i+1) * SIZE);
@@ -687,14 +697,11 @@ void thirdStartup()
 	snakePaint();
 	//打印各类道具
 	readRand();
-	for (i = 0; i < level; i++)
-	{
-		creatFood();
-		creatPoison();
-		creatSmartFood();
-		creatBoom();
-		randnumber += 88;
-	}
+	creatFood();
+	creatSmartFood();
+	iniProp();
+	creatBoom();
+	randnumber += 88;
 }
 //写入随机数
 void writeRand()
@@ -800,7 +807,7 @@ void snakeMove()
 		coverAndClear(temp->next);
 		free(temp->next);
 		temp->next = NULL;
-		creatPoison();
+		creatPoison(temppoison);
 	}
 	else if (check == 3)
 	{
@@ -990,6 +997,8 @@ void snakeMove()
 }
 int checkMove(snakenode *checkpoint)//检查函数，判断蛇的移动是否合法
 {
+	poison *poisonpt;
+	poisonpt = Poison;
 	if (checkpoint->x == food1.x&&checkpoint->y == food1.y)
 	{
 		score += foodscore;
@@ -1033,6 +1042,20 @@ int checkMove(snakenode *checkpoint)//检查函数，判断蛇的移动是否合
 	else
 	{
 		return 0;
+	}
+	while (poisonpt!=NULL)
+	{
+		if (checkpoint->x == poisonpt->x&&checkpoint->y == poisonpt->y)
+		{
+			temppoison = poisonpt;
+			score += poisonscore;
+			sleeptime += 2;
+			return 2;
+		}
+		else
+		{
+			poisonpt = poisonpt->next;
+		}
 	}
 	checkpoint = head->next;
 	while (true)
@@ -1176,7 +1199,7 @@ void freerom()
 int main()
 {
 	initgraph(1120, 480);	
-	label1: welcomeUI();
+	welcomeUI();
 	startup();
 	startGame();
 	freerom();
