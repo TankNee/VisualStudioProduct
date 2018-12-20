@@ -52,7 +52,7 @@ typedef struct poison
 	int y;
 	poison *next;
 }poison;
-poison poison1; poison *Poison,*temppoison;
+poison *Poison,*temppoison;
 //蛇的结构体
 typedef struct snakeNode
 {
@@ -69,7 +69,7 @@ typedef struct boom
 	int y;
 	boom *next;
 }boom;
-boom boom1; boom *Boom;
+boom *Boom,*tempboom;
 typedef struct smartFood
 {
 	int x;
@@ -97,6 +97,7 @@ void secondStartup();
 void thirdStartup();
 void saveGameUI();
 void creatPoison(poison *modelpt);
+void creatBoom(boom *modelpt);
 //蛇的初始化
 void iniSnake()
 {
@@ -131,6 +132,7 @@ void iniProp()
 	poisonpt_2 = Poison;
 	boompt_2 = Boom;
 	creatPoison(Poison);
+	creatBoom(Boom);
 	for (i = 0; i < level / 2; i++)
 	{
 		poisonpt_1= (poison*)malloc(sizeof(poison));
@@ -138,6 +140,7 @@ void iniProp()
 		poisonpt_2->next = poisonpt_1;
 		creatPoison(poisonpt_1);
 		boompt_2->next = boompt_1;
+		creatBoom(boompt_1);
 		poisonpt_2 = poisonpt_1;
 		boompt_2 = boompt_1;
 	}
@@ -150,16 +153,14 @@ void creatPoison(poison *modelpt)
 	srand(randnumber);
 	modelpt->x= rand() % 48 + 15;
 	modelpt->y= rand() % 37 + 10;
-	poison1.x =rand() % 48 + 15;
-	poison1.y = rand()  % 37 + 10;
-	if (checkProp() == 1 || checkProp() == 2|| (poison1.x == GAMEFRAME_WIDTH / 2*SIZE&&poison1.y == FRAME_HEIGHTH / 2*SIZE))
+	/*if (checkProp() == 1 || checkProp() == 2|| (poison1.x == GAMEFRAME_WIDTH / 2*SIZE&&poison1.y == FRAME_HEIGHTH / 2*SIZE))
 	{
 		randnumber += 275;
 		creatPoison(modelpt);
-	}
+	}*/
 	setlinecolor(WHITE);
 	setfillcolor(GREEN);
-	fillcircle(poison1.x*SIZE + SIZE / 2, poison1.x*SIZE + SIZE / 2, SIZE / 2);
+	/*fillcircle(poison1.x*SIZE + SIZE / 2, poison1.x*SIZE + SIZE / 2, SIZE / 2);*/
 	fillcircle(modelpt->x*SIZE + SIZE / 2, modelpt->y*SIZE + SIZE / 2, SIZE / 2);
 	randnumber += 24;
 }
@@ -169,11 +170,11 @@ void twinkle()
 	//setfillcolor(RGB(12,65,77));
 	//setlinestyle(PS_NULL);
 	//fillcircle(poison1.x*SIZE + SIZE / 2, poison1.y*SIZE + SIZE / 2, SIZE / 2);
-	clearcircle(poison1.x*SIZE + SIZE / 2, poison1.y*SIZE + SIZE / 2, SIZE / 2);
+	/*clearcircle(poison1.x*SIZE + SIZE / 2, poison1.y*SIZE + SIZE / 2, SIZE / 2);
 	Sleep(20);
 	setlinecolor(WHITE);
 	setfillcolor(GREEN);
-	fillcircle(poison1.x*SIZE + SIZE / 2, poison1.x*SIZE + SIZE / 2, SIZE / 2);
+	fillcircle(poison1.x*SIZE + SIZE / 2, poison1.x*SIZE + SIZE / 2, SIZE / 2);*/
 }
 //食物的生成
 void creatFood()
@@ -193,19 +194,19 @@ void creatFood()
 	foodscore = 5 + level / 2 + length / 3;
 }
 //炸弹的生成
-void creatBoom()
+void creatBoom(boom *modelpt)
 {
 	srand(randnumber);
-	boom1.x = rand()  % 54 + 7;
-	boom1.y = rand()  % 34 + 13;
-	if (checkProp() == 2 || checkProp() == 3||(boom1.x == GAMEFRAME_WIDTH / 2 * SIZE&&boom1.y == FRAME_HEIGHTH / 2 * SIZE))
+	modelpt->x = rand() % 54 + 7;
+	modelpt->y = rand() % 34 + 13;
+	/*if (checkProp() == 2 || checkProp() == 3||(boom1.x == GAMEFRAME_WIDTH / 2 * SIZE&&boom1.y == FRAME_HEIGHTH / 2 * SIZE))
 	{
 		randnumber += 25;
 		creatBoom();
-	}
+	}*/
 	setlinecolor(WHITE);
 	setfillcolor(LIGHTGRAY);
-	fillcircle(boom1.x*SIZE + SIZE / 2, boom1.y*SIZE + SIZE / 2, SIZE / 2);
+	fillcircle(modelpt->x*SIZE + SIZE / 2, modelpt->y*SIZE + SIZE / 2, SIZE / 2);
 	randnumber += 12;
 }
 void creatSmartFood()
@@ -601,7 +602,6 @@ void startup()
 	creatFood();
 	creatSmartFood();
 	iniProp();
-	creatBoom();
 	randnumber += 88;
 }
 //第二关的初始化
@@ -650,7 +650,6 @@ void secondStartup()
 	creatFood();
 	creatSmartFood();
 	iniProp();
-	creatBoom();
 	randnumber += 88;
 	
 }
@@ -700,7 +699,6 @@ void thirdStartup()
 	creatFood();
 	creatSmartFood();
 	iniProp();
-	creatBoom();
 	randnumber += 88;
 }
 //写入随机数
@@ -829,7 +827,7 @@ void snakeMove()
 			temp->next = NULL;
 			temp = temp->previous;
 		}
-		creatBoom();
+		creatBoom(tempboom);
 	}
 	else if (check == 4)
 	{
@@ -998,25 +996,47 @@ void snakeMove()
 int checkMove(snakenode *checkpoint)//检查函数，判断蛇的移动是否合法
 {
 	poison *poisonpt;
+	boom *boompt;
 	poisonpt = Poison;
+	boompt = Boom;
+	while (boompt != NULL)
+	{
+		if (checkpoint->x == boompt->x&&checkpoint->y == boompt->y)
+		{
+			tempboom = boompt;
+			score -= 2 * length;
+			sleeptime += 2;
+			return 3;
+		}
+		boompt = boompt->next;
+	}
+	while (poisonpt != NULL)
+	{
+		if (checkpoint->x == poisonpt->x&&checkpoint->y == poisonpt->y)
+		{
+			temppoison = poisonpt;
+			score += poisonscore;
+			sleeptime += 2;
+			return 2;
+		}
+		poisonpt = poisonpt->next;
+	}
 	if (checkpoint->x == food1.x&&checkpoint->y == food1.y)
 	{
 		score += foodscore;
 		sleeptime -= 4;
 		return 1;
 	}
-	else if (checkpoint->x == poison1.x&&checkpoint->y == poison1.y)
+	/*else if (checkpoint->x == poison1.x&&checkpoint->y == poison1.y)
 	{
 		score += poisonscore;
 		sleeptime += 2;
 		return 2;
-	}
-	else if (checkpoint->x == boom1.x&&checkpoint->y == boom1.y)
+	}*/
+	/*else if (boompt !=NULL)
 	{
-		score -= 3 * (length / 2);
-		sleeptime += 10;
-		return 3;
-	}
+		
+	}*/
 	else if (checkpoint->x == 0 || checkpoint->x == 63 || checkpoint->y == 0 || checkpoint->y == 47/*||checkObstacle(checkpoint)==1*/)
 	{
 		writeRank();
@@ -1041,21 +1061,7 @@ int checkMove(snakenode *checkpoint)//检查函数，判断蛇的移动是否合
 	}
 	else
 	{
-		return 0;
-	}
-	while (poisonpt!=NULL)
-	{
-		if (checkpoint->x == poisonpt->x&&checkpoint->y == poisonpt->y)
-		{
-			temppoison = poisonpt;
-			score += poisonscore;
-			sleeptime += 2;
-			return 2;
-		}
-		else
-		{
-			poisonpt = poisonpt->next;
-		}
+		return 0;//上面没有运行则到了这里肯定会结束，所以后面的代码会失效！！！！！！！！！
 	}
 	checkpoint = head->next;
 	while (true)
@@ -1088,22 +1094,23 @@ void biteItself()
 //道具检查函数，检查是否生成在同一位置
 int checkProp()
 {
-	if (food1.x == poison1.x&&food1.y == poison1.y)
-	{
-		return 1;
-	}
-	else if (boom1.x == poison1.x&&boom1.y == poison1.y)
-	{
-		return 2;
-	}
-	else if (boom1.x == food1.x&&boom1.y == food1.y)
+	//if (food1.x == poison1.x&&food1.y == poison1.y)
+	//{
+	//	return 1;
+	//}
+	//else if (boom1.x == poison1.x&&boom1.y == poison1.y)
+	//{
+	//	return 2;
+	//}
+	/*if (boom1.x == food1.x&&boom1.y == food1.y)
 	{
 		return 3;
 	}
 	else
 	{
 		return 0;
-	}
+	}*/
+	return 0;
 }
 //获取用户输入
 void getInput()
