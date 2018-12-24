@@ -33,7 +33,7 @@ int i, j;
 //蛇身的长度
 int length=4;
 //速度控制变量
-int  sleeptime = 100-level*10;
+int  sleeptime = 85-level*10;
 //分数  基准分数为0   食物的基准分数为5  毒药基准分数为-10 
 int score = 0,foodscore, poisonscore = -10;
 //食物的结构体
@@ -41,8 +41,6 @@ typedef struct food
 {
 	int x;
 	int y;
-	food *next;
-	food *previous;
 } food;
 food food1; 
 //毒药的结构体
@@ -52,7 +50,7 @@ typedef struct poison
 	int y;
 	poison *next;
 }poison;
-poison *Poison,*temppoison;
+poison *Poison,*temppoison,*headOfPoison;
 //蛇的结构体
 typedef struct snakeNode
 {
@@ -70,6 +68,7 @@ typedef struct boom
 	boom *next;
 }boom;
 boom *Boom,*tempboom;
+//智慧草的结构体
 typedef struct smartFood
 {
 	int x;
@@ -126,9 +125,8 @@ void iniProp()
 	poison *poisonpt_1, *poisonpt_2;
 	boom *boompt_1, *boompt_2;
 	Poison = (poison*)malloc(sizeof(poison));
+	headOfPoison = Poison;
 	Boom = (boom *)malloc(sizeof(boom));
-	/*Poison->previous = NULL;
-	Boom->previous = NULL;*/
 	poisonpt_2 = Poison;
 	boompt_2 = Boom;
 	creatPoison(Poison);
@@ -153,28 +151,36 @@ void creatPoison(poison *modelpt)
 	srand(randnumber);
 	modelpt->x= rand() % 48 + 15;
 	modelpt->y= rand() % 37 + 10;
-	/*if (checkProp() == 1 || checkProp() == 2|| (poison1.x == GAMEFRAME_WIDTH / 2*SIZE&&poison1.y == FRAME_HEIGHTH / 2*SIZE))
-	{
-		randnumber += 275;
-		creatPoison(modelpt);
-	}*/
 	setlinecolor(WHITE);
 	setfillcolor(GREEN);
-	/*fillcircle(poison1.x*SIZE + SIZE / 2, poison1.x*SIZE + SIZE / 2, SIZE / 2);*/
 	fillcircle(modelpt->x*SIZE + SIZE / 2, modelpt->y*SIZE + SIZE / 2, SIZE / 2);
 	randnumber += 24;
 }
 //毒草闪烁函数
-void twinkle()
+void poisonTwinkle_1()
 {
-	//setfillcolor(RGB(12,65,77));
-	//setlinestyle(PS_NULL);
-	//fillcircle(poison1.x*SIZE + SIZE / 2, poison1.y*SIZE + SIZE / 2, SIZE / 2);
-	/*clearcircle(poison1.x*SIZE + SIZE / 2, poison1.y*SIZE + SIZE / 2, SIZE / 2);
-	Sleep(20);
-	setlinecolor(WHITE);
-	setfillcolor(GREEN);
-	fillcircle(poison1.x*SIZE + SIZE / 2, poison1.x*SIZE + SIZE / 2, SIZE / 2);*/
+	Sleep(10);
+	poison *temp;
+	temp = headOfPoison;
+	while (temp!=NULL)
+	{
+		setfillcolor(WHITE);
+		setlinecolor(WHITE);
+		fillrectangle(temp->x*SIZE, temp->y*SIZE, temp->x*SIZE + SIZE, temp->y*SIZE + SIZE);
+		temp = temp->next;
+	}
+}
+void poisonTwinkle_2()
+{
+	poison *temp;
+	temp = headOfPoison;
+	while (temp != NULL)
+	{
+		setfillcolor(GREEN);
+		setlinecolor(WHITE);
+		fillcircle(temp->x*SIZE + SIZE / 2, temp->y*SIZE + SIZE / 2, SIZE / 2);
+		temp = temp->next;
+	}
 }
 //食物的生成
 void creatFood()
@@ -199,11 +205,6 @@ void creatBoom(boom *modelpt)
 	srand(randnumber);
 	modelpt->x = rand() % 54 + 7;
 	modelpt->y = rand() % 34 + 13;
-	/*if (checkProp() == 2 || checkProp() == 3||(boom1.x == GAMEFRAME_WIDTH / 2 * SIZE&&boom1.y == FRAME_HEIGHTH / 2 * SIZE))
-	{
-		randnumber += 25;
-		creatBoom();
-	}*/
 	setlinecolor(WHITE);
 	setfillcolor(LIGHTGRAY);
 	fillcircle(modelpt->x*SIZE + SIZE / 2, modelpt->y*SIZE + SIZE / 2, SIZE / 2);
@@ -226,11 +227,7 @@ void coverAndClear(snakenode *pt)
 	temp = pt;
 	setfillcolor(WHITE);
 	setlinecolor(WHITE);
-	//fillcircle(temp->x*SIZE + SIZE / 2, temp->y*SIZE + SIZE / 2, SIZE / 2);
 	fillrectangle(temp->x*SIZE, temp->y*SIZE, temp->x*SIZE + SIZE, temp->y*SIZE + SIZE);
-	//fillcircle(temp->x*SIZE + SIZE / 2, temp->y*SIZE + SIZE / 2, SIZE / 2);
-	//putimage(temp->x*SIZE, temp->y*SIZE, &img1);
-
 }
 void snakePaint()
 {
@@ -242,7 +239,7 @@ void snakePaint()
 	loadimage(&nodepic, _T("G:\\图片\\Saved Pictures\\贪吃蛇游戏素材\\蛇头及蛇身素材\\蛇身.png"));
 	snakenode *point;
 	point = head;
-	setlinestyle(PS_NULL);
+	//setlinestyle(PS_NULL);
 	switch (snakedir)
 	{
 	case 1:
@@ -440,7 +437,7 @@ void dataShow()
 	putimage(1079, 395, &number[bit_2]);
 	putimage(1096, 395, &number[bit_3]);
 	//通关分数的显示
-	passscore = pass * 100;
+	passscore = pass * 10;
 	bit_1 = passscore / 100;
 	bit_2 = (passscore / 10) % 10;
 	bit_3 = passscore % 10;
@@ -525,6 +522,9 @@ void endGameUI()
 			if (m.mkLButton)
 			{
 				length = 4;
+				score = 0;
+				pass = 0;
+				randnumber += 10;
 				main();
 			}
 		}
@@ -570,7 +570,7 @@ void saveGameUI()
 //数据初始化函数
 void startup()
 {
-	sleeptime = 150 - level * 5;
+	sleeptime = 85 - level * 5;
 	IMAGE whitebackground;
 	loadimage(&whitebackground,_T("G:\\图片\\Saved Pictures\\贪吃蛇游戏素材\\游戏背景素材\\纯白背景.png"));
 	putimage(0, 0, &whitebackground);
@@ -607,7 +607,8 @@ void startup()
 //第二关的初始化
 void secondStartup()
 {
-	sleeptime = 85 - level * 5;
+	randnumber += 26;
+	sleeptime = 70 - level * 5;
 	IMAGE whitebackground;
 	loadimage(&whitebackground, _T("G:\\图片\\Saved Pictures\\贪吃蛇游戏素材\\游戏背景素材\\纯白背景.png"));
 	putimage(0, 0, &whitebackground);
@@ -656,7 +657,8 @@ void secondStartup()
 //第三关初始化
 void thirdStartup()
 {
-	sleeptime = 70 - level * 5;
+	randnumber += 23;
+	sleeptime = 65 - level * 5;
 	IMAGE whitebackground;
 	loadimage(&whitebackground, _T("G:\\图片\\Saved Pictures\\贪吃蛇游戏素材\\游戏背景素材\\纯白背景.png"));
 	putimage(0, 0, &whitebackground);
@@ -1027,37 +1029,40 @@ int checkMove(snakenode *checkpoint)//检查函数，判断蛇的移动是否合
 		sleeptime -= 4;
 		return 1;
 	}
-	/*else if (checkpoint->x == poison1.x&&checkpoint->y == poison1.y)
-	{
-		score += poisonscore;
-		sleeptime += 2;
-		return 2;
-	}*/
-	/*else if (boompt !=NULL)
-	{
-		
-	}*/
-	else if (checkpoint->x == 0 || checkpoint->x == 63 || checkpoint->y == 0 || checkpoint->y == 47/*||checkObstacle(checkpoint)==1*/)
+	else if (checkpoint->x == 0 || checkpoint->x == 63 || checkpoint->y == 0 || checkpoint->y == 47)
 	{
 		writeRank();
 		writeRand();
 		return 4;
 	}
-	else if (checkpoint->x == smartfood1.x&&checkpoint->y ==smartfood1.y)
+	else if (pass == 2)
 	{
-		return 5;
-	}
-	else if (pass==2)
-	{
-		if (checkpoint->x >= 5 &&checkpoint->x <= 59 )
+
+		if (checkpoint->x >= 5 && checkpoint->x <= 59)
 		{
-			if (checkpoint->y == 8  || checkpoint->y == 40 )
+			if (checkpoint->y == 8 || checkpoint->y == 40)
 			{
 				writeRank();
 				writeRand();
 				return 4;
 			}
 		}
+	}
+	else if (pass == 3)
+	{
+		if (checkpoint->y >= 5 && checkpoint->y <= 42)
+		{
+			if (checkpoint->x == 8 || checkpoint->x == 56)
+			{
+				writeRank();
+				writeRand();
+				return 4;
+			}
+		}
+	}
+	else if (checkpoint->x == smartfood1.x&&checkpoint->y ==smartfood1.y)
+	{
+		return 5;
 	}
 	else
 	{
@@ -1094,23 +1099,7 @@ void biteItself()
 //道具检查函数，检查是否生成在同一位置
 int checkProp()
 {
-	//if (food1.x == poison1.x&&food1.y == poison1.y)
-	//{
-	//	return 1;
-	//}
-	//else if (boom1.x == poison1.x&&boom1.y == poison1.y)
-	//{
-	//	return 2;
-	//}
-	/*if (boom1.x == food1.x&&boom1.y == food1.y)
-	{
-		return 3;
-	}
-	else
-	{
-		return 0;
-	}*/
-	return 0;
+	return -1;
 }
 //获取用户输入
 void getInput()
@@ -1174,8 +1163,10 @@ void startGame()
 	while (1)
 	{
 		getInput();
+		poisonTwinkle_1();
 		snakePaint();
 		dataShow();
+		poisonTwinkle_2();
 		if (score >= passscore)
 		{
 			pass=pass+1;
@@ -1192,6 +1183,7 @@ void startGame()
 		{
 			endGameUI();
 		}
+		
 	}
 }
 void freerom()
@@ -1210,6 +1202,5 @@ int main()
 	startup();
 	startGame();
 	freerom();
-	getchar(); 
 	closegraph();
 }	
