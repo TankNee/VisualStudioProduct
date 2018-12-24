@@ -97,6 +97,7 @@ void thirdStartup();
 void saveGameUI();
 void creatPoison(poison *modelpt);
 void creatBoom(boom *modelpt);
+void freerom();
 //蛇的初始化
 void iniSnake()
 {
@@ -514,6 +515,10 @@ void endGameUI()
 		{
 			if (m.mkLButton)
 			{
+				writeRank();
+				writeRand();
+				freerom();
+				closegraph();
 				exit(0);
 			}
 		}
@@ -529,9 +534,6 @@ void endGameUI()
 			}
 		}
 	}
-	writeRank();
-	writeRand();
-	exit(0);
 }
 void saveGameUI()
 {
@@ -1167,6 +1169,7 @@ void startGame()
 		snakePaint();
 		dataShow();
 		poisonTwinkle_2();
+		biteItself();
 		if (score >= passscore)
 		{
 			pass=pass+1;
@@ -1199,8 +1202,5 @@ int main()
 {
 	initgraph(1120, 480);	
 	welcomeUI();
-	startup();
 	startGame();
-	freerom();
-	closegraph();
 }	
