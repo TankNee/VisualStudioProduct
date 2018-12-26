@@ -549,6 +549,7 @@ void endGameUI()
 				score = 0;
 				pass = 0;
 				randnumber += 10;
+				disappeartime = 0;
 				main();
 			}
 		}
@@ -571,6 +572,7 @@ void dieGameUI()
 				score = 0;
 				pass = 0;
 				randnumber += 10;
+				disappeartime = 0;
 				main();
 			}
 		}
