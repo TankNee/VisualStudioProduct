@@ -181,7 +181,7 @@ void poisonTwinkle_2()
 {
 	poison *temp;
 	temp = headOfPoison;
-	if (disappeartime <= 3000)
+	if (disappeartime <= 9000)
 	{
 		Sleep(10);
 		while (temp != NULL)
@@ -195,6 +195,9 @@ void poisonTwinkle_2()
 	}
 	else
 	{
+		/*fillcircle(smartfood1.x*SIZE + SIZE / 2, smartfood1.y*SIZE + SIZE / 2, SIZE / 2);
+		smartfood1.x = -1;
+		smartfood1.y = -1;*/
 		while (temp!=NULL)
 		{
 			temp->x = -1;
@@ -607,7 +610,7 @@ void dataShow()
 	putimage(1079, 395, &number[bit_2]);
 	putimage(1096, 395, &number[bit_3]);
 	//通关分数的显示
-	passscore = pass * 10;
+	passscore = pass * 100;
 	bit_1 = passscore / 100;
 	bit_2 = (passscore / 10) % 10;
 	bit_3 = passscore % 10;
@@ -998,6 +1001,10 @@ void snakeMove()
 	head->next->previous = temp;//将新的第二节与第三节连接
 	head->next = temp;//将新的头部与第二节相连
 	check = checkMove(head);
+	if (head->x == smartfood1.x&&head->y == smartfood1.y)
+	{
+		check = 5;
+	}
 	if (check == 1)
 	{
 		length++;
@@ -1192,7 +1199,6 @@ void snakeMove()
 				}
 			}
 		}
-
 	}
 	else if (check == 0)
 	{
