@@ -43,6 +43,9 @@
     <Filter Include="资源文件\失败界面素材">
       <UniqueIdentifier>{f43b966b-eb18-4d2d-ae91-9ecedc98ee2a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="资源文件\地图选择界面素材">
+      <UniqueIdentifier>{e747f025-fa37-4470-8470-1b9652921f5f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h">
@@ -174,6 +177,9 @@
     </Image>
     <Image Include="G:\图片\Saved Pictures\贪吃蛇游戏素材\失败界面.png">
       <Filter>资源文件\失败界面素材</Filter>
+    </Image>
+    <Image Include="G:\图片\Saved Pictures\贪吃蛇游戏素材\地图选择界面.png">
+      <Filter>资源文件\地图选择界面素材</Filter>
     </Image>
   </ItemGroup>
   <ItemGroup>

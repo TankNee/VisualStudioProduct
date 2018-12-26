@@ -12,6 +12,8 @@
 #define GAMEFRAME_WIDTH 64
 #define FRAME_HEIGHTH 48
 #define DATAFRAME_WIDTH 48
+//地图变量
+int mapselect = 1;
 //关卡变量
 int pass=1,passscore;
 //随机变量
@@ -99,6 +101,8 @@ void saveGameUI();
 void creatPoison(poison *modelpt);
 void creatBoom(boom *modelpt);
 void freerom();
+void mapSelect();
+void map(int maps);
 //蛇的初始化
 void iniSnake()
 {
@@ -306,7 +310,7 @@ void welcomeUI()
 				if (m.mkLButton)
 				{
 					putimage(0, 0, &img2);
-					levelUI();
+					mapSelect();
 					break;
 				}
 			}
@@ -323,12 +327,20 @@ void welcomeUI()
 					fscanf_s(fpSave, "%d", &length);
 					fscanf_s(fpSave, "%d", &snakedir);
 					fscanf_s(fpSave, "%d", &disappeartime);
+					fscanf_s(fpSave, "%d", &mapselect);
 					readRand();
 					fclose(fpSave);
 					switch (pass)
 					{
 					case 1:
-						startup();
+						if (mapselect == 1)
+						{
+							startup();
+						}
+						else if (mapselect == 2|| mapselect == 3)
+						{
+							map(mapselect);
+						}
 						break;
 					case 2:
 						secondStartup();
@@ -365,6 +377,147 @@ void welcomeUI()
 		}
 	}
 }
+void map(int maps)
+{
+	if (maps == 2)
+	{
+		sleeptime = 85 - level * 5;
+		IMAGE whitebackground;
+		loadimage(&whitebackground, _T("G:\\图片\\Saved Pictures\\贪吃蛇游戏素材\\游戏背景素材\\纯白背景.png"));
+		putimage(0, 0, &whitebackground);
+		//打印边框
+		for (i = 0; i < GAMEFRAME_WIDTH; i++)
+		{
+			setlinecolor(WHITE);
+			setfillcolor(BLUE);
+			fillrectangle(i*SIZE, 0, (i + 1)*SIZE, SIZE);
+			setlinecolor(WHITE);
+			setfillcolor(BLUE);
+			fillrectangle(i*SIZE, (FRAME_HEIGHTH - 1)*SIZE, (i + 1)*SIZE, (FRAME_HEIGHTH)*SIZE);
+		}
+		for (j = 0; j < FRAME_HEIGHTH; j++)
+		{
+			setlinecolor(WHITE);
+			setfillcolor(BLUE);
+			fillrectangle(0, j*SIZE, SIZE, (j + 1)*SIZE);
+			setlinecolor(WHITE);
+			setfillcolor(BLUE);
+			fillrectangle((GAMEFRAME_WIDTH - 1)*SIZE, j*SIZE, GAMEFRAME_WIDTH*SIZE, (j + 1)*SIZE);
+		}
+		for (i = 5; i < GAMEFRAME_WIDTH - 5; i++)
+		{
+			setfillcolor(BLUE);
+			fillrectangle(i*SIZE, 2 * SIZE, (i + 1)*SIZE, 3 * SIZE);
+		}
+		//初始化蛇身
+		iniSnake();
+		//打印蛇身
+		snakePaint();
+		//打印各类道具
+		readRand();
+		creatFood();
+		creatSmartFood();
+		iniProp();
+		randnumber += 88;
+	}
+	else if (maps == 3)
+	{
+		sleeptime = 85 - level * 5;
+		IMAGE whitebackground;
+		loadimage(&whitebackground, _T("G:\\图片\\Saved Pictures\\贪吃蛇游戏素材\\游戏背景素材\\纯白背景.png"));
+		putimage(0, 0, &whitebackground);
+		//打印边框
+		for (i = 0; i < GAMEFRAME_WIDTH; i++)
+		{
+			setlinecolor(WHITE);
+			setfillcolor(BLUE);
+			fillrectangle(i*SIZE, 0, (i + 1)*SIZE, SIZE);
+			setlinecolor(WHITE);
+			setfillcolor(BLUE);
+			fillrectangle(i*SIZE, (FRAME_HEIGHTH - 1)*SIZE, (i + 1)*SIZE, (FRAME_HEIGHTH)*SIZE);
+		}
+		for (j = 0; j < FRAME_HEIGHTH; j++)
+		{
+			setlinecolor(WHITE);
+			setfillcolor(BLUE);
+			fillrectangle(0, j*SIZE, SIZE, (j + 1)*SIZE);
+			setlinecolor(WHITE);
+			setfillcolor(BLUE);
+			fillrectangle((GAMEFRAME_WIDTH - 1)*SIZE, j*SIZE, GAMEFRAME_WIDTH*SIZE, (j + 1)*SIZE);
+		}
+		for (i = 5; i < GAMEFRAME_WIDTH - 5; i++)
+		{
+			setfillcolor(BLUE);
+			fillrectangle(i*SIZE, 45 * SIZE, (i + 1)*SIZE, 46 * SIZE);
+		}
+		//初始化蛇身
+		iniSnake();
+		//打印蛇身
+		snakePaint();
+		//打印各类道具
+		readRand();
+		creatFood();
+		creatSmartFood();
+		iniProp();
+		randnumber += 88;
+	}
+}
+void mapSelect()
+{
+	IMAGE img1;
+	loadimage(&img1, _T("G:\\图片\\Saved Pictures\\贪吃蛇游戏素材\\地图选择界面.png"));
+	putimage(0, 0, &img1);
+	MOUSEMSG m;
+	while (true)
+	{
+		mapselect = 1;
+		m = GetMouseMsg();
+		if (m.x >= 500 && m.x <= 617)
+		{
+			if (m.y >= 135 && m.y <= 271)
+			{
+				if (m.mkLButton)
+				{
+					mapselect = 1;
+					levelUI();
+					startup();
+					break;
+				}
+			}
+			else if (m.y >= 286 && m.y <= 376)
+			{
+				if (m.mkLButton)
+				{
+					mapselect = 2;
+					levelUI();
+					map(mapselect);
+					/*for (i = 5; i < GAMEFRAME_WIDTH - 5; i++)
+					{
+						setfillcolor(BLUE);
+						fillrectangle(i*SIZE,2*SIZE,(i+1)*SIZE,3*SIZE);
+					}*/
+					break;
+				}
+			}
+			else if (m.y >= 405 && m.y <= 477)
+			{
+				if (m.mkLButton)
+				{
+					mapselect = 3;
+					levelUI();
+					map(mapselect);
+					/*for (i = 5; i < GAMEFRAME_WIDTH - 5; i++)
+					{
+						setfillcolor(BLUE);
+						fillrectangle(i*SIZE, 45 * SIZE, (i + 1)*SIZE, 46 * SIZE);
+					}*/
+					break;
+				}
+			}
+		}
+	}
+}
+
 void levelUI()
 {
 	IMAGE img1, img2, img3,mouse;
@@ -384,7 +537,6 @@ void levelUI()
 				if (m.mkLButton)
 				{
 					level = 4;
-					startup();
 					break;
 				}
 			}
@@ -394,7 +546,6 @@ void levelUI()
 				if (m.mkLButton)
 				{
 					level = 5;
-					startup();
 					break;
 				}
 			}
@@ -404,7 +555,6 @@ void levelUI()
 				if (m.mkLButton)
 				{
 					level = 8;
-					startup();
 					break;
 				}
 			}
@@ -617,6 +767,7 @@ void saveGameUI()
 				fprintf_s(fpSave, "%d\n", length);
 				fprintf_s(fpSave, "%d\n", snakedir);
 				fprintf_s(fpSave, "%d\n", disappeartime);
+				fprintf_s(fpSave, "%d\n", mapselect);
 				writeRank();
 				writeRand();
 				exit(0);
@@ -1094,6 +1245,32 @@ int checkMove(snakenode *checkpoint)//检查函数，判断蛇的移动是否合
 		writeRank();
 		writeRand();
 		return 4;
+	}
+	else if (pass == 1)
+	{
+		switch (mapselect)
+		{
+		case 2:
+			if (checkpoint->x >= 5 && checkpoint->x <= 58)
+			{
+				if (checkpoint->y == 2)
+				{
+					return 4;
+				}
+			}
+			break;
+		case 3:
+			if (checkpoint->x >= 5 && checkpoint->x <= 58)
+			{
+				if (checkpoint->y == 45)
+				{
+					return 4;
+				}
+			}
+			break;
+		default:
+			break;
+		}
 	}
 	else if (pass == 2)
 	{
