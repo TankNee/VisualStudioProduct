@@ -164,7 +164,6 @@
     <ClCompile Include="链表贪吃蛇test1.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <Image Include="G:\图片\Saved Pictures\贪吃蛇游戏素材\失败界面.png" />
     <Image Include="G:\图片\Saved Pictures\贪吃蛇游戏素材\存档文件\存档界面.png" />
     <Image Include="G:\图片\Saved Pictures\贪吃蛇游戏素材\开始界面-1.png" />
     <Image Include="G:\图片\Saved Pictures\贪吃蛇游戏素材\开始界面素材\开始游戏-1.png" />

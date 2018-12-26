@@ -83,7 +83,6 @@ int checkMove(snakenode *checkpoint);
 int checkProp();
 void dataShow();
 void endGameUI();
-void dieGameUI();
 void startGame();
 void levelUI();
 void writeRank();
@@ -154,7 +153,7 @@ void creatPoison(poison *modelpt)
 	modelpt->x= rand() % 48 + 15;
 	modelpt->y= rand() % 37 + 10;
 	setlinecolor(WHITE);
-	setfillcolor(RGB(251, 192, 71));
+	setfillcolor(GREEN);
 	fillcircle(modelpt->x*SIZE + SIZE / 2, modelpt->y*SIZE + SIZE / 2, SIZE / 2);
 	randnumber += 24;
 }
@@ -178,7 +177,7 @@ void poisonTwinkle_2()
 	temp = headOfPoison;
 	while (temp != NULL)
 	{
-		setfillcolor(RGB(251, 192, 71));
+		setfillcolor(GREEN);
 		setlinecolor(WHITE);
 		fillcircle(temp->x*SIZE + SIZE / 2, temp->y*SIZE + SIZE / 2, SIZE / 2);
 		temp = temp->next;
@@ -195,8 +194,8 @@ void creatFood()
 		randnumber += 54;
 		creatFood();
 	}
-	setlinecolor(RED);
-	setfillcolor(RGB(224, 71, 72));
+	setlinecolor(WHITE);
+	setfillcolor(RED);
 	fillcircle(food1.x*SIZE + SIZE / 2, food1.y*SIZE + SIZE / 2, SIZE / 2);
 	randnumber += 23;
 	foodscore = 5 + level / 2 + length / 3;
@@ -208,7 +207,7 @@ void creatBoom(boom *modelpt)
 	modelpt->x = rand() % 54 + 7;
 	modelpt->y = rand() % 34 + 13;
 	setlinecolor(WHITE);
-	setfillcolor(RGB(12,150,149));
+	setfillcolor(LIGHTGRAY);
 	fillcircle(modelpt->x*SIZE + SIZE / 2, modelpt->y*SIZE + SIZE / 2, SIZE / 2);
 	randnumber += 12;
 }
@@ -421,7 +420,7 @@ void dataShow()
 	}
 	else
 	{
-		dieGameUI();
+		endGameUI();
 	}
 	readRank();
 	//最高分的显示
@@ -532,39 +531,6 @@ void endGameUI()
 				pass = 0;
 				randnumber += 10;
 				main();
-			}
-		}
-	}
-}
-void dieGameUI()
-{
-	IMAGE img1;
-	MOUSEMSG m;
-	loadimage(&img1, _T("G:\\图片\\Saved Pictures\\贪吃蛇游戏素材\\失败界面.png"));
-	putimage(0, 0, &img1);
-	while (true)
-	{
-		m = GetMouseMsg();
-		if (m.x >= 629 && m.x <= 971 && m.y >= 306 && m.y <= 373)
-		{
-			if (m.mkLButton)
-			{
-				length = 4;
-				score = 0;
-				pass = 0;
-				randnumber += 10;
-				main();
-			}
-		}
-		else if (m.x >= 149 && m.x <= 488 && m.y >= 306 && m.y <= 373)
-		{
-			if (m.mkLButton)
-			{
-				writeRank();
-				writeRand();
-				freerom();
-				closegraph();
-				exit(0);
 			}
 		}
 	}
@@ -869,7 +835,7 @@ void snakeMove()
 	}
 	else if (check == 4)
 	{
-		dieGameUI();
+		endGameUI();
 	}
 	else if (check == 5)
 	{
@@ -1127,7 +1093,7 @@ void biteItself()
 	{
 		if (tempnode->x == head->x&&tempnode->y == head->y)
 		{
-			dieGameUI();
+			endGameUI();
 		}
 		tempnode = tempnode->next;
 	}

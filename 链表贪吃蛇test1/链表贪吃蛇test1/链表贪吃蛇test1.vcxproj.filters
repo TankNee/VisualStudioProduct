@@ -169,9 +169,6 @@
     <Image Include="G:\图片\Saved Pictures\贪吃蛇游戏素材\存档文件\存档界面.png">
       <Filter>资源文件\存档文件</Filter>
     </Image>
-    <Image Include="G:\图片\Saved Pictures\贪吃蛇游戏素材\失败界面.png">
-      <Filter>资源文件\结束界面素材</Filter>
-    </Image>
   </ItemGroup>
   <ItemGroup>
     <Text Include="G:\图片\Saved Pictures\贪吃蛇游戏素材\rank.txt">
