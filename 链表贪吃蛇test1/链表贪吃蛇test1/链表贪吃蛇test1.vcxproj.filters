@@ -40,6 +40,9 @@
     <Filter Include="资源文件\存档文件">
       <UniqueIdentifier>{99a531fe-dc77-41e5-9bbc-63d60d678fe0}</UniqueIdentifier>
     </Filter>
+    <Filter Include="资源文件\失败界面素材">
+      <UniqueIdentifier>{f43b966b-eb18-4d2d-ae91-9ecedc98ee2a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h">
@@ -118,9 +121,6 @@
     <Image Include="G:\图片\Saved Pictures\贪吃蛇游戏素材\难度选择-1.png">
       <Filter>资源文件\难度关卡素材</Filter>
     </Image>
-    <Image Include="G:\图片\Saved Pictures\贪吃蛇游戏素材\有计分板的右侧图片-2.png">
-      <Filter>资源文件\游戏背景素材</Filter>
-    </Image>
     <Image Include="G:\图片\Saved Pictures\贪吃蛇游戏素材\蛇头及蛇身素材\蛇身.png">
       <Filter>资源文件\蛇头及蛇身素材</Filter>
     </Image>
@@ -168,6 +168,12 @@
     </Image>
     <Image Include="G:\图片\Saved Pictures\贪吃蛇游戏素材\存档文件\存档界面.png">
       <Filter>资源文件\存档文件</Filter>
+    </Image>
+    <Image Include="G:\图片\Saved Pictures\贪吃蛇游戏素材\游戏背景素材\新的计分板-2.png">
+      <Filter>资源文件\游戏背景素材</Filter>
+    </Image>
+    <Image Include="G:\图片\Saved Pictures\贪吃蛇游戏素材\失败界面.png">
+      <Filter>资源文件\失败界面素材</Filter>
     </Image>
   </ItemGroup>
   <ItemGroup>

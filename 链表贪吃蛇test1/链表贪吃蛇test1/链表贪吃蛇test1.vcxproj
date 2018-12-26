@@ -164,6 +164,7 @@
     <ClCompile Include="链表贪吃蛇test1.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <Image Include="G:\图片\Saved Pictures\贪吃蛇游戏素材\失败界面.png" />
     <Image Include="G:\图片\Saved Pictures\贪吃蛇游戏素材\存档文件\存档界面.png" />
     <Image Include="G:\图片\Saved Pictures\贪吃蛇游戏素材\开始界面-1.png" />
     <Image Include="G:\图片\Saved Pictures\贪吃蛇游戏素材\开始界面素材\开始游戏-1.png" />
@@ -182,7 +183,7 @@
     <Image Include="G:\图片\Saved Pictures\贪吃蛇游戏素材\数字素材\9.png" />
     <Image Include="G:\图片\Saved Pictures\贪吃蛇游戏素材\数据中心素材\数据中心-1.png" />
     <Image Include="G:\图片\Saved Pictures\贪吃蛇游戏素材\数据中心素材\数据中心-2.png" />
-    <Image Include="G:\图片\Saved Pictures\贪吃蛇游戏素材\有计分板的右侧图片-2.png" />
+    <Image Include="G:\图片\Saved Pictures\贪吃蛇游戏素材\游戏背景素材\新的计分板-2.png" />
     <Image Include="G:\图片\Saved Pictures\贪吃蛇游戏素材\游戏背景素材\新的计分板.png" />
     <Image Include="G:\图片\Saved Pictures\贪吃蛇游戏素材\游戏背景素材\纯白背景.png" />
     <Image Include="G:\图片\Saved Pictures\贪吃蛇游戏素材\游戏背景素材\蛇身遮盖素材.png" />
