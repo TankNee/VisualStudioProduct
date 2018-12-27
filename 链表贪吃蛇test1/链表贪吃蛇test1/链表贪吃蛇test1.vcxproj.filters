@@ -46,6 +46,9 @@
     <Filter Include="资源文件\地图选择界面素材">
       <UniqueIdentifier>{e747f025-fa37-4470-8470-1b9652921f5f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="资源文件\欢迎界面素材">
+      <UniqueIdentifier>{27855be1-c2bd-4c62-85a4-01deedd004f7}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h">
@@ -180,6 +183,18 @@
     </Image>
     <Image Include="G:\图片\Saved Pictures\贪吃蛇游戏素材\地图选择界面.png">
       <Filter>资源文件\地图选择界面素材</Filter>
+    </Image>
+    <Image Include="G:\图片\Saved Pictures\贪吃蛇游戏素材\欢迎界面.png">
+      <Filter>资源文件\欢迎界面素材</Filter>
+    </Image>
+    <Image Include="G:\图片\Saved Pictures\贪吃蛇游戏素材\欢迎界面素材\欢迎界面-1.png">
+      <Filter>资源文件\欢迎界面素材</Filter>
+    </Image>
+    <Image Include="G:\图片\Saved Pictures\贪吃蛇游戏素材\欢迎界面素材\欢迎界面-2.png">
+      <Filter>资源文件\欢迎界面素材</Filter>
+    </Image>
+    <Image Include="G:\图片\Saved Pictures\贪吃蛇游戏素材\欢迎界面素材\欢迎界面-3.png">
+      <Filter>资源文件\欢迎界面素材</Filter>
     </Image>
   </ItemGroup>
   <ItemGroup>

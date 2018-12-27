@@ -103,6 +103,7 @@ void creatBoom(boom *modelpt);
 void freerom();
 void mapSelect();
 void map(int maps);
+void readMe();
 //蛇的初始化
 void iniSnake()
 {
@@ -195,9 +196,9 @@ void poisonTwinkle_2()
 	}
 	else
 	{
-		/*fillcircle(smartfood1.x*SIZE + SIZE / 2, smartfood1.y*SIZE + SIZE / 2, SIZE / 2);
+		fillcircle(smartfood1.x*SIZE + SIZE / 2, smartfood1.y*SIZE + SIZE / 2, SIZE / 2);
 		smartfood1.x = -1;
-		smartfood1.y = -1;*/
+		smartfood1.y = -1;
 		while (temp!=NULL)
 		{
 			temp->x = -1;
@@ -312,7 +313,6 @@ void welcomeUI()
 				putimage(0, 0, &img3);
 				if (m.mkLButton)
 				{
-					putimage(0, 0, &img2);
 					mapSelect();
 					break;
 				}
@@ -483,6 +483,7 @@ void mapSelect()
 				{
 					mapselect = 1;
 					levelUI();
+					readMe();
 					startup();
 					break;
 				}
@@ -493,6 +494,7 @@ void mapSelect()
 				{
 					mapselect = 2;
 					levelUI();
+					readMe();
 					map(mapselect);
 					/*for (i = 5; i < GAMEFRAME_WIDTH - 5; i++)
 					{
@@ -508,6 +510,7 @@ void mapSelect()
 				{
 					mapselect = 3;
 					levelUI();
+					readMe();
 					map(mapselect);
 					/*for (i = 5; i < GAMEFRAME_WIDTH - 5; i++)
 					{
@@ -520,7 +523,19 @@ void mapSelect()
 		}
 	}
 }
-
+void readMe()
+{
+	IMAGE img1,img2,img3;
+	loadimage(&img1, _T("G:\\图片\\Saved Pictures\\贪吃蛇游戏素材\\欢迎界面素材\\欢迎界面-1.png"));
+	putimage(0, 0, &img1);
+	Sleep(1000);
+	loadimage(&img2, _T("G:\\图片\\Saved Pictures\\贪吃蛇游戏素材\\欢迎界面素材\\欢迎界面-2.png"));
+	putimage(0, 0, &img2);
+	Sleep(1000);
+	loadimage(&img3, _T("G:\\图片\\Saved Pictures\\贪吃蛇游戏素材\\欢迎界面素材\\欢迎界面-3.png"));
+	putimage(0, 0, &img3);
+	Sleep(2000);
+}
 void levelUI()
 {
 	IMAGE img1, img2, img3,mouse;
@@ -1224,7 +1239,7 @@ int checkMove(snakenode *checkpoint)//检查函数，判断蛇的移动是否合
 		{
 			tempboom = boompt;
 			score -= 2 * length;
-			sleeptime += 2;
+			sleeptime = 85 - level * 5;
 			return 3;
 		}
 		boompt = boompt->next;
@@ -1235,7 +1250,7 @@ int checkMove(snakenode *checkpoint)//检查函数，判断蛇的移动是否合
 		{
 			temppoison = poisonpt;
 			score += poisonscore;
-			sleeptime += 2;
+			sleeptime = 85 - level * 5;
 			return 2;
 		}
 		poisonpt = poisonpt->next;
